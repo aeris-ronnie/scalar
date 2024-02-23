@@ -7,3 +7,5 @@ tsconfig.tsbuildinfo
 
 # Testing data
 test-*.json
+test-*.yaml
+
