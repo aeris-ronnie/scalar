@@ -1,5 +1,17 @@
 # @scalar/components
 
+## 0.2.5
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+
+## 0.2.4
+
+### Patch Changes
+
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+
 ## 0.2.3
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @scalar/themes
 
+## 0.5.8
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+
+## 0.5.7
+
+### Patch Changes
+
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+
+## 0.5.6
+
+### Patch Changes
+
+- 5b3f7d9: fix: updated scroll region padding to for chrome update
+
 ## 0.5.5
 
 ### Patch Changes

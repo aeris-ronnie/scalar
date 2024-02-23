@@ -1,5 +1,47 @@
 # @scalar/api-client
 
+## 0.12.5
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+- 7ea052b: chore: remove some languages from CodeMirror
+- Updated dependencies [1669b27]
+- Updated dependencies [7ea052b]
+  - @scalar/use-codemirror@0.8.6
+  - @scalar/components@0.2.5
+  - @scalar/use-modal@0.2.8
+  - @scalar/themes@0.5.8
+
+## 0.12.4
+
+### Patch Changes
+
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+- Updated dependencies [c6b95ca]
+  - @scalar/use-codemirror@0.8.5
+  - @scalar/components@0.2.4
+  - @scalar/use-modal@0.2.7
+  - @scalar/themes@0.5.7
+
+## 0.12.3
+
+### Patch Changes
+
+- Updated dependencies [3ade0d1]
+  - @scalar/use-modal@0.2.6
+
+## 0.12.2
+
+### Patch Changes
+
+- c23b2cb: fix: set max height on request body codemirror
+- 5b3f7d9: fix: updated scroll region padding to for chrome update
+- Updated dependencies [5b3f7d9]
+  - @scalar/use-modal@0.2.5
+  - @scalar/themes@0.5.6
+  - @scalar/components@0.2.3
+
 ## 0.12.1
 
 ### Patch Changes

@@ -1,5 +1,35 @@
 # @scalar/swagger-editor
 
+## 0.10.8
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+- 7ea052b: chore: remove some languages from CodeMirror
+- Updated dependencies [1669b27]
+- Updated dependencies [7ea052b]
+  - @scalar/use-codemirror@0.8.6
+  - @scalar/components@0.2.5
+  - @scalar/themes@0.5.8
+
+## 0.10.7
+
+### Patch Changes
+
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+- Updated dependencies [c6b95ca]
+  - @scalar/use-codemirror@0.8.5
+  - @scalar/components@0.2.4
+  - @scalar/themes@0.5.7
+
+## 0.10.6
+
+### Patch Changes
+
+- Updated dependencies [5b3f7d9]
+  - @scalar/themes@0.5.6
+  - @scalar/components@0.2.3
+
 ## 0.10.5
 
 ### Patch Changes

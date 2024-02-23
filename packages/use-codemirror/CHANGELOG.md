@@ -1,5 +1,18 @@
 # @scalar/use-codemirror
 
+## 0.8.6
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+- 7ea052b: chore: remove some languages from CodeMirror
+
+## 0.8.5
+
+### Patch Changes
+
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+
 ## 0.8.4
 
 ### Patch Changes

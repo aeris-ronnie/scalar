@@ -1,5 +1,17 @@
 # @scalar/swagger-parser
 
+## 0.5.18
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+
+## 0.5.17
+
+### Patch Changes
+
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+
 ## 0.5.16
 
 ### Patch Changes

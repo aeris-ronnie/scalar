@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { CodeMirror } from '@scalar/use-codemirror'
-import { computed } from 'vue'
 
 import { useRequestStore } from '../../../stores/requestStore'
 import { CollapsibleSection } from '../../CollapsibleSection'
@@ -34,7 +33,7 @@ const updateActiveRequest = (value: string) => {
     <template v-else>
       <CodeMirror
         :content="activeRequest.body"
-        :languages="['json']"
+        language="json"
         lineNumbers
         @change="updateActiveRequest" />
     </template>

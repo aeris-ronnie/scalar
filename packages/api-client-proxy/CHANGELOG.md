@@ -1,5 +1,17 @@
 # @scalar/api-client-proxy
 
+## 0.5.20
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+
+## 0.5.19
+
+### Patch Changes
+
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+
 ## 0.5.18
 
 ### Patch Changes

@@ -1,5 +1,69 @@
 # @scalar/api-reference
 
+## 1.17.3
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+- d96253a: fix: http basic auth empty credentials should not be encoded
+- 1669b27: refactor: migrate from use-toasts to vue-sonner
+- 9d43b0a: fix: urls with dynamic protocol are prefixed with the window location origin
+- a64c389: fix: onSpecUpdate is not called
+- 7ea052b: chore: remove some languages from CodeMirror
+- Updated dependencies [1669b27]
+- Updated dependencies [7ea052b]
+  - @scalar/swagger-editor@0.10.8
+  - @scalar/swagger-parser@0.5.18
+  - @scalar/use-tooltip@0.5.11
+  - @scalar/api-client@0.12.5
+  - @scalar/components@0.2.5
+  - @scalar/use-modal@0.2.8
+  - @scalar/themes@0.5.8
+
+## 1.17.2
+
+### Patch Changes
+
+- 0133f86: fix: prismJS is commonjs and breaks in ESM envs
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+- Updated dependencies [c6b95ca]
+  - @scalar/swagger-editor@0.10.7
+  - @scalar/swagger-parser@0.5.17
+  - @scalar/use-tooltip@0.5.10
+  - @scalar/api-client@0.12.4
+  - @scalar/components@0.2.4
+  - @scalar/use-toasts@0.5.15
+  - @scalar/use-modal@0.2.7
+  - @scalar/themes@0.5.7
+
+## 1.17.1
+
+### Patch Changes
+
+- Updated dependencies [3ade0d1]
+  - @scalar/use-modal@0.2.6
+  - @scalar/api-client@0.12.3
+
+## 1.17.0
+
+### Minor Changes
+
+- cd3068a: feat: switch syntax highlighting dependency from codemirror to prismjs
+
+## 1.16.3
+
+### Patch Changes
+
+- 9f5fdf5: fix: tab overflow hidden
+- 5b3f7d9: fix: updated scroll region padding to for chrome update
+- Updated dependencies [c23b2cb]
+- Updated dependencies [5b3f7d9]
+  - @scalar/api-client@0.12.2
+  - @scalar/use-modal@0.2.5
+  - @scalar/themes@0.5.6
+  - @scalar/components@0.2.3
+  - @scalar/swagger-editor@0.10.6
+
 ## 1.16.2
 
 ### Patch Changes

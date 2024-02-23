@@ -1,5 +1,17 @@
 # @scalar/echo-server
 
+## 0.5.11
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+
+## 0.5.10
+
+### Patch Changes
+
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+
 ## 0.5.9
 
 ### Patch Changes

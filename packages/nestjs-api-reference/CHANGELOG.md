@@ -1,5 +1,48 @@
 # @scalar/nestjs-api-reference
 
+## 0.1.55
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+- Updated dependencies [1669b27]
+- Updated dependencies [d96253a]
+- Updated dependencies [1669b27]
+- Updated dependencies [9d43b0a]
+- Updated dependencies [a64c389]
+- Updated dependencies [7ea052b]
+  - @scalar/api-reference@1.17.3
+
+## 0.1.54
+
+### Patch Changes
+
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+- Updated dependencies [0133f86]
+- Updated dependencies [c6b95ca]
+  - @scalar/api-reference@1.17.2
+
+## 0.1.53
+
+### Patch Changes
+
+- @scalar/api-reference@1.17.1
+
+## 0.1.52
+
+### Patch Changes
+
+- Updated dependencies [cd3068a]
+  - @scalar/api-reference@1.17.0
+
+## 0.1.51
+
+### Patch Changes
+
+- Updated dependencies [9f5fdf5]
+- Updated dependencies [5b3f7d9]
+  - @scalar/api-reference@1.16.3
+
 ## 0.1.50
 
 ### Patch Changes

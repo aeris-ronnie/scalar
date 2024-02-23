@@ -1,5 +1,17 @@
 # @scalar/fastify-api-reference
 
+## 1.17.3
+
+### Patch Changes
+
+- 1669b27: chore: update dependencies
+
+## 1.17.2
+
+### Patch Changes
+
+- c6b95ca: chore: upgrade from Vite 4 to Vite 5
+
 ## 1.16.0
 
 ### Minor Changes
