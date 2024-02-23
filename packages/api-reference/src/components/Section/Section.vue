@@ -43,7 +43,7 @@ function handleScroll() {
   margin: auto;
 
   /* Extend by header height to line up scroll position */
-  padding: calc(90px + var(--refs-header-height)) 0 90px 0;
+  padding: calc(40px + var(--refs-header-height)) 0 40px 0;
   margin-top: calc(-1 * var(--refs-header-height));
 }
 .references-classic .section {

@@ -33,7 +33,7 @@ const orderedStatusCodes = computed(() => {
   return Object.keys(props?.operation?.information?.responses ?? {}).sort(
     (x) => {
       if (x === 'default') {
-        return -1
+        return 1
       }
 
       return 0
