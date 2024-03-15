@@ -10,7 +10,7 @@
     "css-variables",
     "scalar"
   ],
-  "version": "0.5.8",
+  "version": "0.6.4",
   "engines": {
     "node": ">=18"
   },
@@ -26,7 +26,6 @@
   "exports": {
     ".": "./dist/index.js",
     "./base.css": "./dist/base.css",
-    "./scrollbar.css": "./dist/scrollbar.css",
     "./presets/alternate.css": "./dist/presets/alternate.css",
     "./presets/default.css": "./dist/presets/default.css",
     "./presets/moon.css": "./dist/presets/moon.css",

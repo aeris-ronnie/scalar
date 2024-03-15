@@ -1,5 +1,51 @@
 # @scalar/themes
 
+## 0.6.4
+
+### Patch Changes
+
+- 68cda2b: feat: add x-tagGroups in sidebar
+
+## 0.6.3
+
+### Patch Changes
+
+- 897990b: fix: mobile backgrounds for mars and blueplanet
+
+## 0.6.2
+
+### Patch Changes
+
+- ddc9b17: fix: re-added moving the components css into js so importing the css file is no longer needed
+- 775646a: fix: removed extra copy of vue from themes and some dependencies
+- ef3a015: chore: update to typescript 5.4
+
+## 0.6.1
+
+### Patch Changes
+
+- 4ef178f: fix: define color-scheme to improve request client selector readability
+
+## 0.6.0
+
+### Minor Changes
+
+- ad2b95a: fix: scope scrollbar styles
+- ad2b95a: refactor: move reset component to themes package
+
+## 0.5.10
+
+### Patch Changes
+
+- 51acf2c: fix: sidebar theme precedence and remove unused OSS variables
+
+## 0.5.9
+
+### Patch Changes
+
+- c103201: fix: polish sidebar
+- d2728c8: fix: theme fixes
+
 ## 0.5.8
 
 ### Patch Changes

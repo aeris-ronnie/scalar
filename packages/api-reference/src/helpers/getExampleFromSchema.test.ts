@@ -195,6 +195,66 @@ describe('getExampleFromSchema', () => {
     ])
   })
 
+  it('uses the first example in anyOf', () => {
+    expect(
+      getExampleFromSchema({
+        type: 'array',
+        items: {
+          anyOf: [
+            {
+              type: 'string',
+              example: 'foobar',
+            },
+            {
+              type: 'string',
+              example: 'barfoo',
+            },
+          ],
+        },
+      }),
+    ).toMatchObject(['foobar'])
+  })
+
+  it('uses one example in oneOf', () => {
+    expect(
+      getExampleFromSchema({
+        type: 'array',
+        items: {
+          oneOf: [
+            {
+              type: 'string',
+              example: 'foobar',
+            },
+            {
+              type: 'string',
+              example: 'barfoo',
+            },
+          ],
+        },
+      }),
+    ).toMatchObject(['foobar'])
+  })
+
+  it('uses all examples in allOf', () => {
+    expect(
+      getExampleFromSchema({
+        type: 'array',
+        items: {
+          allOf: [
+            {
+              type: 'string',
+              example: 'foobar',
+            },
+            {
+              type: 'string',
+              example: 'barfoo',
+            },
+          ],
+        },
+      }),
+    ).toMatchObject(['foobar', 'barfoo'])
+  })
+
   it('uses the default value', () => {
     const schema = {
       type: 'string',
@@ -567,7 +627,7 @@ describe('getExampleFromSchema', () => {
     })
   })
 
-  it('overwrites with the schema additionalProperties', () => {
+  it('adds a key-value pair example with the schema additionalProperties', () => {
     expect(
       getExampleFromSchema({
         properties: {
@@ -583,7 +643,28 @@ describe('getExampleFromSchema', () => {
         type: 'object',
       }),
     ).toMatchObject({
-      myProperty: '',
+      myProperty: {
+        someKey: '',
+      },
+    })
+  })
+
+  it('overwrites with nullable additionalProperties schema', () => {
+    expect(
+      getExampleFromSchema({
+        properties: {
+          myProperty: {
+            additionalProperties: {
+              nullable: true,
+            },
+            type: 'object',
+            title: 'MyProperty',
+          },
+        },
+        type: 'object',
+      }),
+    ).toMatchObject({
+      myProperty: null,
     })
   })
 })

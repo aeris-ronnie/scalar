@@ -45,13 +45,18 @@ const handleClick = async () => {
       }"
       @click="handleClick">
       <!-- If children are detected then show the nesting icon -->
-      <ScalarIconButton
+      <!-- Use &hairsp; to vertically center scalar icon button to the first line of text in the sidebar heading link -->
+      <p
         v-if="hasChildren"
-        class="toggle-nested-icon"
-        :icon="open ? 'ChevronDown' : 'ChevronRight'"
-        label="Toggle group"
-        size="sm"
-        @click.stop="handleClick" />
+        class="sidebar-heading-chevron">
+        <ScalarIconButton
+          class="toggle-nested-icon"
+          :icon="open ? 'ChevronDown' : 'ChevronRight'"
+          label="Toggle group"
+          size="sm"
+          @click.stop="handleClick" />
+        &hairsp;
+      </p>
       <a
         class="sidebar-heading-link"
         :href="`#${item.id}`">
@@ -59,16 +64,20 @@ const handleClick = async () => {
           v-if="item?.icon?.src"
           class="sidebar-icon"
           :src="item.icon.src" />
-        <span>
+        <p class="sidebar-heading-link-title">
           {{ item.title }}
-        </span>
-        <HttpMethod
+        </p>
+        <p
           v-if="item.httpVerb"
-          as="div"
-          class="sidebar-heading-type"
-          :method="item.httpVerb"
-          property="--method-color"
-          short />
+          class="sidebar-heading-link-method">
+          &hairsp;
+          <HttpMethod
+            as="div"
+            class="sidebar-heading-type"
+            :method="item.httpVerb"
+            property="--method-color"
+            short />
+        </p>
       </a>
     </div>
     <slot v-if="open" />
@@ -90,22 +99,26 @@ const handleClick = async () => {
   font-weight: var(--theme-semibold, var(--default-theme-semibold));
   word-break: break-word;
   line-height: 1.385;
-  align-items: center;
   max-width: 100%;
   position: relative;
   cursor: pointer;
-  border-radius: 0 var(--theme-radius, var(--default-theme-radius))
-    var(--theme-radius, var(--default-theme-radius)) 0;
+  border-radius: var(--theme-radius, var(--default-theme-radius));
   flex: 1;
-  padding-right: 12px;
+  padding-right: 9px;
   user-select: none;
 }
-.sidebar-heading.deprecated span {
+.sidebar-heading.deprecated .sidebar-heading-link-title {
   text-decoration: line-through;
 }
 .sidebar-heading:hover {
   /* prettier-ignore */
   background: var(--sidebar-item-hover-background, var(--default-sidebar-item-hover-background, var(--theme-background-2, var(--default-theme-background-2))));
+}
+.sidebar-heading:hover .sidebar-heading-link-title {
+  color: var(
+    --sidebar-item-hover-color,
+    var(--default-sidebar-item-hover-color, currentColor)
+  );
 }
 .sidebar-heading:hover span {
   color: var(
@@ -124,6 +137,15 @@ const handleClick = async () => {
   /* prettier-ignore */
   background: var(--sidebar-item-active-background, var(--default-sidebar-item-active-background, var(--theme-background-accent, var(--default-theme-background-accent))));
 }
+.active_page.sidebar-heading:hover .sidebar-heading-link-title {
+  color: var(
+    --sidebar-color-active,
+    var(
+      --default-sidebar-color-active,
+      var(--theme-color-accent, var(--default-theme-color-accent))
+    )
+  );
+}
 .sidebar-heading-link {
   text-decoration: none;
   color: inherit;
@@ -132,10 +154,16 @@ const handleClick = async () => {
   display: flex;
   flex: 1;
   justify-content: space-between;
-  align-items: center;
   gap: 2px;
 }
-
+.sidebar-heading p {
+  height: fit-content;
+  display: flex;
+  align-items: center;
+}
+.sidebar-heading p:empty {
+  display: none;
+}
 /* Sidebar link icon */
 .link-icon {
   position: relative;
@@ -147,7 +175,6 @@ const handleClick = async () => {
   align-items: center;
   justify-content: center;
   margin-right: 6px;
-
   width: 13px;
   height: 13px;
 }
@@ -162,17 +189,29 @@ const handleClick = async () => {
 }
 
 /* Folder/page collapse icon */
+/* awkward pixel value to deal with hairspace alignment across browser*/
+.sidebar-heading-chevron {
+  margin: 5px -5.5px 5px -9px;
+}
 .toggle-nested-icon {
   border: none;
-  position: absolute;
   color: currentColor;
+  padding: 2px;
+  color: var(--sidebar-color-2, var(--default-sidebar-color-2));
+}
+.active_page .toggle-nested-icon {
+  color: var(
+    --sidebar-color-active,
+    var(
+      --default-sidebar-color-active,
+      var(--theme-color-accent, var(--default-theme-color-accent))
+    )
+  );
 }
 
 .toggle-nested-icon:hover,
 .toggle-nested-icon:focus-visible {
   color: currentColor;
-  filter: drop-shadow(0 0.125px 0 currentColor)
-    drop-shadow(0 -0.125px 0 currentColor);
 }
 
 .action-menu {
@@ -207,25 +246,26 @@ const handleClick = async () => {
 }
 
 .sidebar-heading-type {
-  width: 3.9em;
+  min-width: 3.9em;
   overflow: hidden;
-  height: 1.8em;
-  line-height: 1.8em;
   border-radius: 30px;
+  padding: 0 3px;
+  line-height: 14px;
   flex-shrink: 0;
-  color: var(
-    --sidebar-background-1,
-    var(
-      --default-sidebar-background-1,
-      var(--theme-background-1, var(--default-theme-background-1))
-    )
+  color: white;
+  color: color-mix(
+    in srgb,
+    var(--method-color, var(--theme-color-1)),
+    transparent 0%
   );
-  background: var(
-    --method-color,
-    var(--theme-color-2, var(--default-theme-color-2))
+  background: var(--method-color, var(--theme-background-3));
+  background: color-mix(
+    in srgb,
+    var(--method-color, var(--theme-background-3)),
+    transparent 90%
   );
   text-transform: uppercase;
-  font-size: 8px;
+  font-size: 8.5px;
   font-weight: bold;
   text-align: center;
   position: relative;
@@ -247,6 +287,15 @@ const handleClick = async () => {
     var(
       --default-sidebar-color-active,
       var(--theme-color-accent, var(--default-theme-color-accent))
+    )
+  );
+}
+.sidebar-group-item__folder {
+  color: var(
+    --sidebar-color-1,
+    var(
+      --default-sidebar-color-1,
+      var(--theme-color-1, var(--default-theme-color-1))
     )
   );
 }

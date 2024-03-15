@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ScalarIcon } from '@scalar/components'
+import { ScalarCodeBlock, ScalarIcon } from '@scalar/components'
 import { computed, ref } from 'vue'
 
 import { useClipboard } from '../../../../hooks'
@@ -11,7 +11,6 @@ import {
   CardTab,
   CardTabHeader,
 } from '../../../Card'
-import { CodeBlock } from '../../../CodeBlock'
 import { MarkdownRenderer } from '../../../MarkdownRenderer'
 import ExamplePicker from '../ExamplePicker.vue'
 import ExampleResponse from './ExampleResponse.vue'
@@ -62,6 +61,9 @@ const currentJsonResponse = computed(
   () =>
     // OpenAPI 3.x
     currentResponse.value?.content?.['application/json'] ??
+    currentResponse.value?.content?.['application/json; charset=utf-8'] ??
+    currentResponse.value?.content?.['application/problem+json'] ??
+    currentResponse.value?.content?.['application/vnd.api+json'] ??
     // Swagger 2.0
     currentResponse.value,
 )
@@ -83,6 +85,7 @@ const showSchema = ref(false)
   <Card v-if="orderedStatusCodes.length">
     <CardTabHeader
       muted
+      x="as"
       @change="changeTab">
       <CardTab
         v-for="statusCode in orderedStatusCodes"
@@ -98,7 +101,8 @@ const showSchema = ref(false)
           @click="() => copyToClipboard(currentJsonResponse?.example)">
           <ScalarIcon
             icon="Clipboard"
-            width="10px" />
+            width="10px"
+            x="asd" />
         </button>
         <label
           v-if="currentJsonResponse?.schema"
@@ -121,7 +125,7 @@ const showSchema = ref(false)
       </CardContent> -->
       <CardContent muted>
         <template v-if="currentJsonResponse?.schema">
-          <CodeBlock
+          <ScalarCodeBlock
             v-if="showSchema && currentResponseWithExample"
             :content="currentResponseWithExample"
             lang="json" />

@@ -1,5 +1,5 @@
+import type { OpenAPIV3 } from '@scalar/openapi-parser'
 import type { HarRequest } from 'httpsnippet-lite'
-import type { OpenAPIV3 } from 'openapi-types'
 
 import type { AuthenticationState } from '../types'
 
@@ -36,20 +36,37 @@ function authenticationRequired(
  */
 export function getRequestFromAuthentication(
   authentication: AuthenticationState,
-  security?: OpenAPIV3.SecurityRequirementObject[],
+  operationSecurity?: OpenAPIV3.SecurityRequirementObject[],
 ): Partial<HarRequest> {
   const headers: HarRequest['headers'] = []
   const queryString: HarRequest['queryString'] = []
   const cookies: HarRequest['cookies'] = []
 
   // Check whether auth is required
-  if (!authentication.securitySchemeKey || !authenticationRequired(security)) {
+  if (
+    !authentication.securitySchemeKey ||
+    !authenticationRequired(operationSecurity)
+  ) {
     return { headers, queryString, cookies }
   }
 
-  // We’re using a parsed Swagger file here, so let’s get rid of the `ReferenceObject` type
+  // Check if the (globally) selected security scheme is allowed for the operation
+  const operationAllowsSelectedSecurityScheme = operationSecurity?.some(
+    (securityRequirement) =>
+      authentication.securitySchemeKey &&
+      Object.keys(securityRequirement).includes(
+        authentication.securitySchemeKey,
+      ),
+  )
+
+  // If the (globally) selected security scheme is not allowed for the operation, use the first available security scheme.
+  const operationSecurityKey = operationAllowsSelectedSecurityScheme
+    ? authentication.securitySchemeKey
+    : Object.keys(operationSecurity?.[0] ?? {}).pop()
+
+  // We’re using a parsed OpenAPI file here, so let’s get rid of the `ReferenceObject` type
   const securityScheme =
-    authentication.securitySchemes?.[authentication.securitySchemeKey]
+    authentication.securitySchemes?.[operationSecurityKey ?? '']
 
   if (securityScheme) {
     // API Key
@@ -104,10 +121,7 @@ export function getRequestFromAuthentication(
       ) {
         const { username, password } = authentication.http.basic
 
-        const token =
-          username?.length || password?.length
-            ? Buffer.from(`${username}:${password}`).toString('base64')
-            : ''
+        const token = getBase64Token(username, password)
 
         headers.push({
           name: 'Authorization',
@@ -149,4 +163,27 @@ export function getRequestFromAuthentication(
   }
 
   return { headers, queryString, cookies }
+}
+
+export function getBase64Token(username: string, password: string) {
+  return username?.length || password?.length
+    ? Buffer.from(`${username}:${password}`).toString('base64')
+    : ''
+}
+
+export function getSecretCredentialsFromAuthentication(
+  authentication: AuthenticationState,
+) {
+  return [
+    authentication.apiKey.token,
+    authentication.http.bearer.token,
+    authentication.oAuth2.clientId,
+    // The basic auth token is the base64 encoded username and password
+    getBase64Token(
+      authentication.http.basic.username,
+      authentication.http.basic.password,
+    ),
+    // The plain text password shouldn’t appear anyway, but just in case
+    authentication.http.basic.password,
+  ].filter(Boolean)
 }

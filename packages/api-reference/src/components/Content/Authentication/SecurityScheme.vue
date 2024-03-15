@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types'
+import type { OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
 import { computed } from 'vue'
 
 import { useGlobalStore } from '../../../stores'
@@ -115,6 +115,7 @@ const startAuthentication = (url: string) => {
       v-if="value.type === 'apiKey'"
       :id="`security-scheme-${value.name}`"
       placeholder="Token"
+      type="password"
       :value="authentication.apiKey.token"
       @input="handleApiKeyTokenInput">
       {{ value.in.charAt(0).toUpperCase() + value.in.slice(1) }} API Key
@@ -146,6 +147,7 @@ const startAuthentication = (url: string) => {
         v-else-if="value.type === 'http' && value.scheme === 'bearer'"
         id="http.bearer.token"
         placeholder="Token"
+        type="password"
         :value="authentication.http.bearer.token"
         @input="handleHttpBearerTokenInput">
         Bearer Token
@@ -160,6 +162,7 @@ const startAuthentication = (url: string) => {
       <CardFormTextInput
         id="oAuth2.clientId"
         placeholder="Token"
+        type="password"
         :value="authentication.oAuth2.clientId"
         @input="handleOpenAuth2ClientIdInput">
         Client ID

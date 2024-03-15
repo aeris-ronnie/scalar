@@ -1,5 +1,23 @@
 # @scalar/api-client-proxy
 
+## 0.5.23
+
+### Patch Changes
+
+- ef3a015: chore: update to typescript 5.4
+
+## 0.5.22
+
+### Patch Changes
+
+- 3b672cc: fix: revert css changes to components lib
+
+## 0.5.21
+
+### Patch Changes
+
+- 5bc2ebf: Add syntax highlighting back to codemirror
+
 ## 0.5.20
 
 ### Patch Changes

@@ -92,6 +92,11 @@ watch(
   margin: 12px 0;
   font-weight: var(--theme-semibold, var(--default-theme-semibold));
 }
+.markdown :deep(img) {
+  overflow: hidden;
+  border-radius: var(--theme-radius, var(--default-theme-radius));
+  max-width: 100%;
+}
 /* Don't add margin to the first block */
 .markdown :deep(> :first-child) {
   margin-top: 0;
@@ -103,7 +108,7 @@ watch(
 .markdown :deep(h5),
 .markdown :deep(h6) {
   font-size: var(--font-size, var(--default-font-size));
-  margin: 24px 0 6px;
+  margin: 18px 0 6px;
   font-weight: var(--theme-bold, var(--default-theme-bold));
   display: block;
   line-height: 1.45;

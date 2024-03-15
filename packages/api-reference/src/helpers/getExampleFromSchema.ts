@@ -59,7 +59,7 @@ export const getExampleFromSchema = (
 
   // Object
   if (schema.type === 'object' || schema.properties !== undefined) {
-    let response: Record<string, any> = {}
+    const response: Record<string, any> = {}
 
     // Regular properties
     if (schema.properties !== undefined) {
@@ -88,10 +88,11 @@ export const getExampleFromSchema = (
 
       // Merge objects, but not arrays
       if (
+        additionalSchema &&
         typeof additionalSchema === 'object' &&
         !Array.isArray(additionalSchema)
       ) {
-        response = {
+        return {
           ...response,
           ...getExampleFromSchema(
             schema.additionalProperties,
@@ -100,9 +101,18 @@ export const getExampleFromSchema = (
           ),
         }
       }
-      // Otherwise just overwrite what’s there
-      else {
-        response = additionalSchema
+      // Add an example for nullable properties
+      if (additionalSchema === null) {
+        return null
+      }
+      // Otherwise, add an example of key-value pair
+      return {
+        ...response,
+        someKey: getExampleFromSchema(
+          schema.additionalProperties,
+          options,
+          level + 1,
+        ),
       }
     }
 
@@ -116,6 +126,34 @@ export const getExampleFromSchema = (
 
     if (schema.example !== undefined) {
       return wrapItems ? { [itemsXmlTagName]: schema.example } : schema.example
+    }
+
+    // Check whether the array has a anyOf, oneOf, or allOf rule
+    if (schema.items) {
+      // Check for all those rules
+      const rules = ['anyOf', 'oneOf', 'allOf']
+
+      for (const rule of rules) {
+        // Skip early if the rule is not defined
+        if (!schema.items[rule]) {
+          continue
+        }
+
+        // Otherwise generate examples for the rule
+        const schemas = ['anyOf', 'oneOf'].includes(rule)
+          ? // Use the first item only
+            schema.items[rule].slice(0, 1)
+          : // Use all items
+            schema.items[rule]
+
+        const exampleFromRule = schemas.map((item: Record<string, any>) =>
+          getExampleFromSchema(item, options, level + 1),
+        )
+
+        return wrapItems
+          ? [{ [itemsXmlTagName]: exampleFromRule }]
+          : exampleFromRule
+      }
     }
 
     if (schema.items?.type) {

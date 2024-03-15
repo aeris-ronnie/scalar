@@ -5,9 +5,12 @@ import { type ServerResponse } from 'http'
 
 export type NestJSReferenceConfiguration = ReferenceConfiguration & {
   withFastify?: boolean
+  cdn?: string
 }
 
-export type ApiReferenceOptions = ReferenceConfiguration
+export type ApiReferenceOptions = ReferenceConfiguration & {
+  cdn?: string
+}
 
 /**
  * The custom theme CSS for the API Reference.
@@ -41,7 +44,7 @@ export const customThemeCSS = `
 }
 /* Document Sidebar */
 .light-mode .t-doc__sidebar,
-.dark-mode .sidebar {
+.dark-mode .t-doc__sidebar {
   --sidebar-background-1: var(--theme-background-1);
   --sidebar-item-hover-color: currentColor;
   --sidebar-item-hover-background: var(--theme-background-2);
@@ -52,7 +55,7 @@ export const customThemeCSS = `
   --sidebar-color-active: var(--theme-color-1);
   --sidebar-search-background: var(--theme-background-2);
   --sidebar-search-border-color: var(--theme-background-2);
-  --sidebar-search--color: var(--theme-color-3);
+  --sidebar-search-color: var(--theme-color-3);
 }
 
 /* advanced */
@@ -101,7 +104,7 @@ export const ApiReference = (options: ApiReferenceOptions) => {
             : JSON.stringify(options.spec?.content)
           : ''
       }</script>
-    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+    <script src="${options.cdn || 'https://cdn.jsdelivr.net/npm/@scalar/api-reference'}"></script>
   `
 }
 
