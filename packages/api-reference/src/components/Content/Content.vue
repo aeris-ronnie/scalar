@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useResizeObserver } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 import { hasModels } from '../../helpers'
 import { useNavState, useRefOnMount } from '../../hooks'
@@ -17,19 +16,10 @@ import { Webhooks } from './Webhooks'
 
 const props = defineProps<{
   parsedSpec: Spec
-  rawSpec: string
   layout?: 'default' | 'accordion'
 }>()
 
-const referenceEl = ref<HTMLElement | null>(null)
-const isNarrow = ref(true)
-
 const { getOperationId, getTagId } = useNavState()
-
-useResizeObserver(
-  referenceEl,
-  (entries) => (isNarrow.value = entries[0].contentRect.width < 900),
-)
 
 const fallBackServer = useRefOnMount(() => {
   return {
@@ -76,11 +66,7 @@ const isLazy =
   !window.location.hash.startsWith('#model')
 </script>
 <template>
-  <div
-    ref="referenceEl"
-    :class="{
-      'references-narrow': isNarrow,
-    }">
+  <div class="narrow-references-container">
     <slot name="start" />
 
     <Loading
@@ -91,8 +77,7 @@ const isLazy =
     <Introduction
       v-if="parsedSpec.info.title || parsedSpec.info.description"
       :info="parsedSpec.info"
-      :parsedSpec="parsedSpec"
-      :rawSpec="rawSpec">
+      :parsedSpec="parsedSpec">
       <template #[introCardsSlot]>
         <div
           class="introduction-cards"
@@ -148,6 +133,12 @@ const isLazy =
     <slot name="end" />
   </div>
 </template>
+<style>
+.narrow-references-container {
+  container-name: narrow-references-container;
+  container-type: inline-size;
+}
+</style>
 <style scoped>
 .render-loading {
   height: calc(var(--full-height) - var(--refs-header-height));
@@ -163,16 +154,30 @@ const isLazy =
 .introduction-cards-row {
   flex-flow: row wrap;
   gap: 24px;
-  --default-theme-background-2: var(--default-theme-background-1);
-  --theme-background-2: var(--theme-background-1);
 }
 .introduction-cards-row > * {
   flex: 1;
-  min-width: min-content;
 }
-.references-narrow .introduction-cards-row {
-  flex-direction: column;
-  align-items: stretch;
+@media (min-width: 600px) {
+  .introduction-cards-row > * {
+    min-width: min-content;
+  }
+}
+@media (max-width: 600px) {
+  .introduction-cards-row > * {
+    max-width: 100%;
+  }
+}
+@container (max-width: 900px) {
+  .introduction-cards-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+.references-classic .introduction-cards-row :deep(.card-footer),
+.references-classic .introduction-cards-row :deep(.scalar-card),
+.references-classic .introduction-cards-row :deep(.scalar-card--muted) {
+  background: var(--theme-background-1, var(--default-theme-background-1));
 }
 .references-classic
   .introduction-cards-row

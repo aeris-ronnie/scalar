@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { type OpenAPIV2, type OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
+import {
+  type OpenAPIV2,
+  type OpenAPIV3,
+  type OpenAPIV3_1,
+} from '@scalar/openapi-parser'
 import { computed } from 'vue'
 
 import type { Spec } from '../../../types'
@@ -20,7 +24,6 @@ const props = defineProps<{
     OpenAPIV2.InfoObject | OpenAPIV3.InfoObject | OpenAPIV3_1.InfoObject
   >
   parsedSpec: Spec
-  rawSpec: string
 }>()
 
 const specVersion = computed(() => {
@@ -56,7 +59,7 @@ const specVersion = computed(() => {
               tight>
               {{ info.title }}
             </SectionHeader>
-            <DownloadSpec :value="rawSpec" />
+            <DownloadSpec />
             <Description :value="info.description" />
           </SectionColumn>
           <SectionColumn v-if="$slots.aside">

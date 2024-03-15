@@ -13,7 +13,7 @@
     "rest",
     "testing"
   ],
-  "version": "0.12.5",
+  "version": "1.0.2",
   "engines": {
     "node": ">=18"
   },
@@ -29,10 +29,8 @@
   },
   "type": "module",
   "main": "./dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    "import": "./dist/index.js"
-  },
+  "types": "./dist/index.d.ts",
+  "exports": "./dist/index.js",
   "files": [
     "dist",
     "CHANGELOG.md"
@@ -54,12 +52,12 @@
     "content-type": "^1.0.5",
     "nanoid": "^5.0.1",
     "pretty-bytes": "^6.1.1",
-    "pretty-ms": "^8.0.0",
-    "vue": "^3.3.0"
+    "pretty-ms": "^8.0.0"
   },
   "devDependencies": {
     "@scalar/api-client-proxy": "workspace:*",
     "@scalar/echo-server": "workspace:*",
+    "@scalar/oas-utils": "workspace:*",
     "@types/content-type": "^1.1.6",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitest/coverage-v8": "^1.2.2",
@@ -67,9 +65,11 @@
     "vite": "^5.1.1",
     "vite-plugin-css-injected-by-js": "^3.4.0",
     "vitest": "^1.2.2",
+    "vue": "^3.3.0",
     "vue-tsc": "^1.8.19"
   },
   "peerDependencies": {
-    "vue": "^3.3.0"
+    "vue": "^3.3.0",
+    "@scalar/oas-utils": "workspace:*"
   }
 }

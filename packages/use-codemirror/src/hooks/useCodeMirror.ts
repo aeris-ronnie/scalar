@@ -1,10 +1,26 @@
+import {
+  autocompletion,
+  closeBrackets,
+  closeBracketsKeymap,
+  completionKeymap,
+} from '@codemirror/autocomplete'
+import { css } from '@codemirror/lang-css'
 import { html } from '@codemirror/lang-html'
 import { json } from '@codemirror/lang-json'
-import { type LanguageSupport, StreamLanguage } from '@codemirror/language'
-import * as yamlMode from '@codemirror/legacy-modes/mode/yaml'
+import { yaml } from '@codemirror/lang-yaml'
+import {
+  type LanguageSupport,
+  type StreamLanguage,
+  bracketMatching,
+  defaultHighlightStyle,
+  indentOnInput,
+  syntaxHighlighting,
+} from '@codemirror/language'
 import { type Extension, StateEffect } from '@codemirror/state'
 import {
   EditorView,
+  type KeyBinding,
+  highlightSpecialChars,
   keymap,
   lineNumbers as lineNumbersExtension,
 } from '@codemirror/view'
@@ -62,6 +78,18 @@ const hasProvider = (
   content?: MaybeRefOrGetter<string | undefined>
   provider: MaybeRefOrGetter<Extension>
 } => 'provider' in params && !!toValue(params.provider)
+
+const selectAllKeyBinding: KeyBinding = {
+  key: 'Mod-a',
+  run: (view) => {
+    // Select the entire content
+    view.dispatch({
+      selection: { anchor: 0, head: view.state.doc.length },
+      scrollIntoView: false,
+    })
+    return true
+  },
+}
 
 /** Reactive CodeMirror Integration */
 export const useCodeMirror = (
@@ -199,15 +227,16 @@ export const useCodeMirror = (
 
 // ---------------------------------------------------------------------------
 
-const syntaxHighlighting: {
-  [lang in CodeMirrorLanguage]: LanguageSupport | StreamLanguage<any>
+const languageExtensions: {
+  [lang in CodeMirrorLanguage]: () => LanguageSupport | StreamLanguage<any>
 } = {
-  html: html(),
-  json: json(),
-  yaml: StreamLanguage.define(yamlMode.yaml),
+  html: html,
+  json: json,
+  yaml: yaml,
+  css: css,
 }
 
-/** Generate the list of extension from parameters */
+/** Generate  the list of extension from parameters */
 function getCodeMirrorExtensions({
   onChange,
   onBlur,
@@ -236,6 +265,8 @@ function getCodeMirrorExtensions({
   additionalExtensions?: Extension[]
 }) {
   const extensions: Extension[] = [
+    highlightSpecialChars(),
+    syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
     EditorView.theme({
       '.cm-line': {
         lineHeight: '20px',
@@ -269,11 +300,25 @@ function getCodeMirrorExtensions({
   if (!withoutTheme) extensions.push(customTheme)
 
   // Read only
-  if (readOnly) extensions.push(EditorView.editable.of(false))
+  if (readOnly) {
+    extensions.push(EditorView.editable.of(false))
+  } else {
+    extensions.push(
+      indentOnInput(),
+      bracketMatching(),
+      autocompletion(),
+      closeBrackets(),
+      keymap.of([
+        ...completionKeymap,
+        ...closeBracketsKeymap,
+        selectAllKeyBinding,
+      ]),
+    )
+  }
 
   // Syntax highlighting
-  if (language && typeof syntaxHighlighting[language] === 'string') {
-    extensions.push(syntaxHighlighting[language] as Extension)
+  if (language && languageExtensions[language]) {
+    extensions.push(languageExtensions[language]())
   }
 
   // Line numbers

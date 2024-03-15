@@ -10,21 +10,22 @@
     "node": ">=18"
   },
   "scripts": {
+    "build": "pnpm types:check && pnpm build-only",
+    "build-only": "vite build",
     "dev": "vite",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "lint:check": "eslint .",
+    "lint:fix": "eslint .  --fix",
+    "types:check": "tsc --noEmit --skipLibCheck"
   },
   "type": "module",
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "veaury": "^2.3.12",
-    "vue": "^3.3.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@scalar/api-reference": "workspace:*",
-    "@types/react": "^18.2.48",
-    "@types/react-dom": "^18.2.18",
+    "@scalar/api-reference-react": "workspace:*",
+    "@types/react": "^18.2.60",
+    "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitejs/plugin-react": "^4.2.1",
@@ -36,8 +37,7 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.3",
-    "typescript": "^5.2.2",
-    "vite": "^5.1.1",
-    "vite-plugin-node-polyfills": "^0.21.0"
+    "typescript": "^5.4.2",
+    "vite": "^5.1.1"
   }
 }

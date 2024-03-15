@@ -1,11 +1,9 @@
-<script setup lang="ts">
-import { DarkModeIconToggle } from './DarkModeToggle'
-</script>
+<script setup lang="ts"></script>
 <template>
   <div class="references-classic-header-container">
     <div class="references-classic-header">
       <slot />
-      <DarkModeIconToggle class="t-doc__sidebar" />
+      <slot name="dark-mode-toggle" />
     </div>
   </div>
 </template>
@@ -20,14 +18,16 @@ import { DarkModeIconToggle } from './DarkModeToggle'
   margin: auto;
   padding: 12px 0;
 }
-.references-narrow .references-classic-header {
-  padding: 12px 24px;
-}
 .references-classic-header-container {
   padding: 0 60px;
 }
-.references-narrow .references-classic-header-container {
-  padding: 0;
+@container narrow-references-container (max-width: 900px) {
+  .references-classic-header {
+    padding: 12px 24px;
+  }
+  .references-classic-header-container {
+    padding: 0;
+  }
 }
 .references-classic-header-icon {
   height: 24px;

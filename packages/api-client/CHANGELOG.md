@@ -1,5 +1,146 @@
 # @scalar/api-client
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [68cda2b]
+  - @scalar/themes@0.6.4
+  - @scalar/components@0.4.4
+
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [bbbba1f]
+- Updated dependencies [897990b]
+  - @scalar/components@0.4.4
+  - @scalar/themes@0.6.3
+
+## 1.0.0
+
+### Minor Changes
+
+- 7fb8273: Migrate to @scalar/openapi-parser
+
+### Patch Changes
+
+- 6036d25: fix: allow application/vnd.api+json return type
+- Updated dependencies [7fb8273]
+  - @scalar/use-codemirror@0.9.0
+  - @scalar/oas-utils@0.1.0
+
+## 0.12.18
+
+### Patch Changes
+
+- cecf074: Migrate to oas utils for basic spec operations
+- Updated dependencies [cecf074]
+  - @scalar/use-codemirror@0.8.10
+  - @scalar/oas-utils@0.0.4
+
+## 0.12.17
+
+### Patch Changes
+
+- ddc9b17: fix: re-added moving the components css into js so importing the css file is no longer needed
+- 775646a: fix: removed extra copy of vue from themes and some dependencies
+- ef3a015: chore: update to typescript 5.4
+- Updated dependencies [ddc9b17]
+- Updated dependencies [775646a]
+- Updated dependencies [ef3a015]
+  - @scalar/components@0.4.3
+  - @scalar/themes@0.6.2
+  - @scalar/use-codemirror@0.8.9
+  - @scalar/use-modal@0.2.9
+
+## 0.12.16
+
+### Patch Changes
+
+- Updated dependencies [4ef178f]
+  - @scalar/themes@0.6.1
+  - @scalar/components@0.4.2
+
+## 0.12.15
+
+### Patch Changes
+
+- Updated dependencies [ad2b95a]
+- Updated dependencies [ad2b95a]
+  - @scalar/themes@0.6.0
+  - @scalar/components@0.4.2
+
+## 0.12.14
+
+### Patch Changes
+
+- 3b672cc: fix: revert css changes to components lib
+- Updated dependencies [3b672cc]
+  - @scalar/components@0.4.2
+
+## 0.12.13
+
+### Patch Changes
+
+- c5e8b13: feat: hide secret credentials
+- Updated dependencies [c5e8b13]
+  - @scalar/components@0.4.1
+
+## 0.12.12
+
+### Patch Changes
+
+- 5bc2ebf: Add syntax highlighting back to codemirror
+- Updated dependencies [407a3af]
+- Updated dependencies [5bc2ebf]
+  - @scalar/components@0.4.0
+  - @scalar/use-codemirror@0.8.8
+
+## 0.12.11
+
+### Patch Changes
+
+- d16d07f: style: added scrollbar and border to api-client
+
+## 0.12.10
+
+### Patch Changes
+
+- Updated dependencies [5a94530]
+  - @scalar/use-codemirror@0.8.7
+
+## 0.12.9
+
+### Patch Changes
+
+- 6857b8d: fix: api client syntax highlighting
+- Updated dependencies [6857b8d]
+  - @scalar/components@0.3.0
+
+## 0.12.8
+
+### Patch Changes
+
+- Updated dependencies [51acf2c]
+  - @scalar/themes@0.5.10
+  - @scalar/components@0.2.6
+
+## 0.12.7
+
+### Patch Changes
+
+- Updated dependencies [c103201]
+- Updated dependencies [d2728c8]
+  - @scalar/components@0.2.6
+  - @scalar/themes@0.5.9
+
+## 0.12.6
+
+### Patch Changes
+
+- b9523b7: fix: allow application/problem+json return type
+
 ## 0.12.5
 
 ### Patch Changes

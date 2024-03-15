@@ -92,18 +92,23 @@ watch(
   margin: 12px 0;
   font-weight: var(--theme-semibold, var(--default-theme-semibold));
 }
-/* Don't add margin to the first block 
+.markdown :deep(img) {
+  overflow: hidden;
+  border-radius: var(--theme-radius, var(--default-theme-radius));
+  max-width: 100%;
+}
+/* Don't add margin to the first block */
 .markdown :deep(> :first-child) {
   margin-top: 0;
 }
-*/
-.markdown :deep(h1),
+*/ .markdown :deep(h1),
 .markdown :deep(h2),
 .markdown :deep(h3),
 .markdown :deep(h4),
 .markdown :deep(h5),
 .markdown :deep(h6) {
-  margin: 24px 0 6px;
+  font-size: var(--font-size, var(--default-font-size));
+  margin: 18px 0 6px;
   font-weight: var(--theme-bold, var(--default-theme-bold));
   display: block;
   line-height: 1.45;
