@@ -101,7 +101,7 @@ watch(
 .markdown :deep(> :first-child) {
   margin-top: 0;
 }
-*/ .markdown :deep(h1),
+.markdown :deep(h1),
 .markdown :deep(h2),
 .markdown :deep(h3),
 .markdown :deep(h4),
