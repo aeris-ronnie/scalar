@@ -1,5 +1,97 @@
 # @scalar/fastify-api-reference
 
+## 1.19.5
+
+### Patch Changes
+
+- 00abdc5: chore: remove body margin reset everywhere, it’s not needed anymore
+- e520363: feat: added oauth2 implicit login flow
+
+## 1.19.4
+
+### Patch Changes
+
+- c987a90: fix: add min height to classic layout
+
+## 1.19.3
+
+### Patch Changes
+
+- 21195b7: fix: add back sidebar item hover color
+- 68cda2b: feat: add x-tagGroups in sidebar
+
+## 1.19.2
+
+### Patch Changes
+
+- a292ccb: fix: mobile backgrounds for mars and blueplanet
+
+## 1.19.1
+
+### Patch Changes
+
+- 148966b: fix: move errors into warning from new parser
+
+## 1.19.0
+
+### Minor Changes
+
+- 7fb8273: Migrate to @scalar/openapi-parser
+
+## 1.18.7
+
+### Patch Changes
+
+- cecf074: Migrate to oas utils for basic spec operations
+
+## 1.18.5
+
+### Patch Changes
+
+- 5cf4afa: style: replace resize observer with css container queries
+
+## 1.18.2
+
+### Patch Changes
+
+- ef3a015: chore: update to typescript 5.4
+
+## 1.17.15
+
+### Patch Changes
+
+- 3b672cc: fix: revert css changes to components lib
+
+## 1.17.14
+
+### Patch Changes
+
+- fd0af3c: fix: mobile header button
+
+## 1.17.13
+
+### Patch Changes
+
+- 5bf377e: fix: visual regressions
+
+## 1.17.12
+
+### Patch Changes
+
+- 5bc2ebf: Add syntax highlighting back to codemirror
+
+## 1.17.6
+
+### Patch Changes
+
+- ca7cced: fix: \_\_dirname undefined (again)
+
+## 1.17.5
+
+### Patch Changes
+
+- d78e247: fix: ESM envs \_\_dirname is undefined
+
 ## 1.17.3
 
 ### Patch Changes

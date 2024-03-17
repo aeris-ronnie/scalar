@@ -189,7 +189,7 @@ app.get(
 serve(
   {
     fetch: app.fetch,
-    port: 5055,
+    port: 5054,
   },
   (address) => {
     console.log(

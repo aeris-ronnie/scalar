@@ -1,5 +1,214 @@
 # @scalar/nextjs-api-reference
 
+## 0.2.6
+
+### Patch Changes
+
+- Updated dependencies [e2491c1]
+  - @scalar/api-reference@1.19.6
+
+## 0.2.5
+
+### Patch Changes
+
+- 00abdc5: chore: remove body margin reset everywhere, it’s not needed anymore
+- e520363: feat: added oauth2 implicit login flow
+- Updated dependencies [00abdc5]
+- Updated dependencies [e520363]
+  - @scalar/api-reference@1.19.5
+
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [c987a90]
+  - @scalar/api-reference@1.19.4
+
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [fc3f821]
+- Updated dependencies [21195b7]
+- Updated dependencies [68cda2b]
+  - @scalar/api-reference@1.19.3
+
+## 0.2.2
+
+### Patch Changes
+
+- @scalar/api-reference@1.19.2
+
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [148966b]
+  - @scalar/api-reference@1.19.1
+
+## 0.2.0
+
+### Minor Changes
+
+- 7fb8273: Migrate to @scalar/openapi-parser
+
+### Patch Changes
+
+- Updated dependencies [7b31aa3]
+- Updated dependencies [6036d25]
+- Updated dependencies [53eaa1e]
+- Updated dependencies [7fb8273]
+  - @scalar/api-reference@1.19.0
+
+## 0.1.51
+
+### Patch Changes
+
+- cecf074: Migrate to oas utils for basic spec operations
+- Updated dependencies [cecf074]
+  - @scalar/api-reference@1.18.7
+
+## 0.1.50
+
+### Patch Changes
+
+- Updated dependencies [c1410e7]
+  - @scalar/api-reference@1.18.6
+
+## 0.1.49
+
+### Patch Changes
+
+- 5cf4afa: style: replace resize observer with css container queries
+- Updated dependencies [5cf4afa]
+  - @scalar/api-reference@1.18.5
+
+## 0.1.48
+
+### Patch Changes
+
+- Updated dependencies [b0bd55d]
+  - @scalar/api-reference@1.18.4
+
+## 0.1.47
+
+### Patch Changes
+
+- Updated dependencies [5ffe3b6]
+- Updated dependencies [bc9f965]
+  - @scalar/api-reference@1.18.3
+
+## 0.1.46
+
+### Patch Changes
+
+- ddc9b17: fix: re-added moving the components css into js so importing the css file is no longer needed
+- ef3a015: chore: update to typescript 5.4
+- Updated dependencies [ddc9b17]
+- Updated dependencies [775646a]
+- Updated dependencies [ef3a015]
+  - @scalar/api-reference@1.18.2
+
+## 0.1.45
+
+### Patch Changes
+
+- @scalar/api-reference@1.18.1
+
+## 0.1.44
+
+### Patch Changes
+
+- Updated dependencies [ad2b95a]
+- Updated dependencies [ad2b95a]
+  - @scalar/api-reference@1.18.0
+
+## 0.1.43
+
+### Patch Changes
+
+- Updated dependencies [f39516c]
+- Updated dependencies [8b2558a]
+- Updated dependencies [ad80db9]
+- Updated dependencies [2e9218f]
+  - @scalar/api-reference@1.17.16
+
+## 0.1.42
+
+### Patch Changes
+
+- Updated dependencies [3b672cc]
+- Updated dependencies [0f76d3d]
+  - @scalar/api-reference@1.17.15
+
+## 0.1.41
+
+### Patch Changes
+
+- Updated dependencies [fd0af3c]
+  - @scalar/api-reference@1.17.14
+
+## 0.1.40
+
+### Patch Changes
+
+- Updated dependencies [5bf377e]
+- Updated dependencies [c5e8b13]
+  - @scalar/api-reference@1.17.13
+
+## 0.1.39
+
+### Patch Changes
+
+- Updated dependencies [e0eacb2]
+- Updated dependencies [db7762c]
+- Updated dependencies [5bc2ebf]
+  - @scalar/api-reference@1.17.12
+
+## 0.1.38
+
+### Patch Changes
+
+- @scalar/api-reference@1.17.11
+
+## 0.1.37
+
+### Patch Changes
+
+- Updated dependencies [d8d8341]
+  - @scalar/api-reference@1.17.10
+
+## 0.1.36
+
+### Patch Changes
+
+- Updated dependencies [6857b8d]
+  - @scalar/api-reference@1.17.9
+
+## 0.1.35
+
+### Patch Changes
+
+- @scalar/api-reference@1.17.8
+
+## 0.1.34
+
+### Patch Changes
+
+- d2728c8: fix: theme fixes
+- Updated dependencies [55b9633]
+- Updated dependencies [c103201]
+- Updated dependencies [31d12a7]
+- Updated dependencies [36630da]
+  - @scalar/api-reference@1.17.7
+
+## 0.1.33
+
+### Patch Changes
+
+- Updated dependencies [b9523b7]
+  - @scalar/api-reference@1.17.4
+
 ## 0.1.32
 
 ### Patch Changes

@@ -104,9 +104,6 @@ export const defaultCss = `
   --theme-color-orange: #ff8d4d;
   --theme-color-purple: #b191f9;
 }
-.scalar-card:nth-of-type(3) {
-  display: none;
-}
 `
 
 /**
@@ -145,11 +142,6 @@ export function htmlDocument(options: FastifyApiReferenceOptions) {
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1" />
-    <style>
-      body {
-        margin: 0;
-      }
-    </style>
   </head>
   <body>
     ${javascript(options)}
@@ -166,11 +158,10 @@ const fastifyApiReference: FastifyPluginAsync<
 
   // Register fastify-html if it isn’t registered yet.
   if (!fastify.hasPlugin('fastify-html')) {
-    // @ts-ignore
     await fastify.register(import('fastify-html'))
   }
 
-  // If no spec is passed and @fastify/swagger isn’t loaded, show a warning.
+  // If no OpenAPI specification is passed and @fastify/swagger isn’t loaded, show a warning.
   if (
     !configuration?.spec?.content &&
     !configuration?.spec?.url &&

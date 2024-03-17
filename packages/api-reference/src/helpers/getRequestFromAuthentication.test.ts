@@ -198,6 +198,8 @@ describe('getRequestFromAuthentication', () => {
         oAuth2: {
           clientId: '123',
           scopes: [],
+          accessToken: '',
+          state: '',
         },
       },
       [
@@ -207,14 +209,12 @@ describe('getRequestFromAuthentication', () => {
       ],
     )
 
-    expect(request).toMatchObject({
-      headers: [
-        {
-          name: 'Authorization',
-          value: 'Bearer 123',
-        },
-      ],
-    })
+    expect(request).toHaveProperty('headers', [
+      {
+        name: 'Authorization',
+        value: 'Bearer YOUR_SECRET_TOKEN',
+      },
+    ])
   })
 
   it('only return required security schemes', () => {
@@ -379,6 +379,45 @@ describe('getRequestFromAuthentication', () => {
 
     expect(request).toMatchObject({
       headers: [],
+    })
+  })
+
+  it('uses custom security scheme for operation', () => {
+    const request = getRequestFromAuthentication(
+      {
+        ...createEmptyAuthenticationState(),
+        securitySchemeKey: 'bearerAuth',
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+          v1Auth: {
+            type: 'apiKey',
+            name: 'X-Auth-Token',
+            in: 'header',
+            description: 'JWT token',
+          },
+        },
+        apiKey: {
+          token: '123',
+        },
+      },
+      [
+        {
+          v1Auth: [],
+        },
+      ],
+    )
+
+    expect(request).toMatchObject({
+      headers: [
+        {
+          name: 'X-Auth-Token',
+          value: '123',
+        },
+      ],
     })
   })
 })

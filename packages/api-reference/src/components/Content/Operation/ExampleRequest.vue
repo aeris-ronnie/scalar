@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { HttpMethod } from '@scalar/api-client'
-import { ScalarIcon } from '@scalar/components'
+import { ScalarCodeBlock, ScalarIcon } from '@scalar/components'
 import { snippetz } from '@scalar/snippetz'
 import { HTTPSnippet } from 'httpsnippet-lite'
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 
 import {
+  GLOBAL_SECURITY_SYMBOL,
   getApiClientRequest,
   getHarRequest,
   getRequestFromAuthentication,
   getRequestFromOperation,
+  getSecretCredentialsFromAuthentication,
   getUrlFromServerState,
 } from '../../../helpers'
 import { useClipboard, useSnippetTargets } from '../../../hooks'
@@ -17,7 +19,6 @@ import { useGlobalStore } from '../../../stores'
 import { useTemplateStore } from '../../../stores/template'
 import type { TransformedOperation } from '../../../types'
 import { Card, CardContent, CardFooter, CardHeader } from '../../Card'
-import { CodeBlock } from '../../CodeBlock'
 import ExamplePicker from './ExamplePicker.vue'
 import TextSelect from './TextSelect.vue'
 
@@ -45,6 +46,8 @@ const hasMultipleExamples = computed<boolean>(
     ).length > 1,
 )
 
+const getGlobalSecurity = inject(GLOBAL_SECURITY_SYMBOL)
+
 const generateSnippet = async (): Promise<string> => {
   // Generate a request object
   const request = getHarRequest(
@@ -60,7 +63,7 @@ const generateSnippet = async (): Promise<string> => {
     ),
     getRequestFromAuthentication(
       authenticationState,
-      props.operation.information?.security,
+      props.operation.information?.security ?? getGlobalSecurity?.(),
     ),
   )
 
@@ -69,7 +72,6 @@ const generateSnippet = async (): Promise<string> => {
     // Snippetz
     if (
       snippetz().hasPlugin(
-        // @ts-ignore
         state.selectedClient.targetKey.replace('javascript', 'js'),
         // @ts-ignore
         state.selectedClient.clientKey,
@@ -122,6 +124,7 @@ computed(() => {
     serverState: serverState,
     authenticationState: authenticationState,
     operation: props.operation,
+    globalSecurity: getGlobalSecurity?.(),
   })
 })
 </script>
@@ -179,9 +182,11 @@ computed(() => {
       frameless>
       <!-- Multiple examples -->
       <div class="code-snippet">
-        <!-- @vue-ignore -->
-        <CodeBlock
+        <ScalarCodeBlock
           :content="CodeMirrorValue"
+          :hideCredentials="
+            getSecretCredentialsFromAuthentication(authenticationState)
+          "
           :lang="state.selectedClient.targetKey"
           lineNumbers />
       </div>

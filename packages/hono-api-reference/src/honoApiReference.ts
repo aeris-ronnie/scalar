@@ -4,6 +4,7 @@ import { html, raw } from 'hono/html'
 
 export type ApiReferenceOptions = ReferenceConfiguration & {
   pageTitle?: string
+  cdn?: string
 }
 
 /**
@@ -97,7 +98,7 @@ export const customThemeCSS = `
   --sidebar-color-active: var(--theme-color-accent);
   --sidebar-search-background: var(--theme-background-2);
   --sidebar-search-border-color: var(--sidebar-border-color);
-  --sidebar-search--color: var(--theme-color-3);
+  --sidebar-search-color: var(--theme-color-3);
 }
 
 .dark-mode .sidebar {
@@ -111,14 +112,14 @@ export const customThemeCSS = `
   --sidebar-color-active: var(--theme-color-accent);
   --sidebar-search-background: #252529;
   --sidebar-search-border-color: transparent;
-  --sidebar-search--color: var(--theme-color-3);
+  --sidebar-search-color: var(--theme-color-3);
 }
 `
 
 /**
  * The HTML to load the @scalar/api-reference JavaScript package.
  */
-export const javascript = (configuration: ReferenceConfiguration) => {
+export const javascript = (configuration: ApiReferenceOptions) => {
   return html`
     <script
       id="api-reference"
@@ -134,7 +135,8 @@ export const javascript = (configuration: ReferenceConfiguration) => {
           : '',
       )}
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+    <script src="${configuration.cdn ||
+      'https://cdn.jsdelivr.net/npm/@scalar/api-reference'}"></script>
   `
 }
 
@@ -154,10 +156,6 @@ export const apiReference =
             name="viewport"
             content="width=device-width, initial-scale=1" />
           <style>
-            body {
-              margin: 0;
-            }
-
             ${options.theme ? null : customThemeCSS}
           </style>
         </head>

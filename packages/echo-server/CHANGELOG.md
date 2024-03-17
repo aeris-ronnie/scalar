@@ -1,5 +1,29 @@
 # @scalar/echo-server
 
+## 0.6.0
+
+### Minor Changes
+
+- 7fb8273: Migrate to @scalar/openapi-parser
+
+## 0.5.14
+
+### Patch Changes
+
+- ef3a015: chore: update to typescript 5.4
+
+## 0.5.13
+
+### Patch Changes
+
+- 3b672cc: fix: revert css changes to components lib
+
+## 0.5.12
+
+### Patch Changes
+
+- 5bc2ebf: Add syntax highlighting back to codemirror
+
 ## 0.5.11
 
 ### Patch Changes

@@ -1,5 +1,35 @@
 # @scalar/use-codemirror
 
+## 0.9.0
+
+### Minor Changes
+
+- 7fb8273: Migrate to @scalar/openapi-parser
+
+## 0.8.10
+
+### Patch Changes
+
+- cecf074: Migrate to oas utils for basic spec operations
+
+## 0.8.9
+
+### Patch Changes
+
+- ef3a015: chore: update to typescript 5.4
+
+## 0.8.8
+
+### Patch Changes
+
+- 5bc2ebf: Add syntax highlighting back to codemirror
+
+## 0.8.7
+
+### Patch Changes
+
+- 5a94530: fix: select all keybinding does not work
+
 ## 0.8.6
 
 ### Patch Changes

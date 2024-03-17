@@ -1,5 +1,263 @@
 # @scalar/api-reference
 
+## 1.19.6
+
+### Patch Changes
+
+- e2491c1: chore: update axios
+- Updated dependencies [e2491c1]
+  - @scalar/api-client@1.0.3
+
+## 1.19.5
+
+### Patch Changes
+
+- 00abdc5: chore: remove body margin reset everywhere, it’s not needed anymore
+- e520363: feat: added oauth2 implicit login flow
+
+## 1.19.4
+
+### Patch Changes
+
+- c987a90: fix: add min height to classic layout
+
+## 1.19.3
+
+### Patch Changes
+
+- fc3f821: fix: example for array with anyOf, allOf, oneOf schemas doesn’t have a value
+- 21195b7: fix: add back sidebar item hover color
+- 68cda2b: feat: add x-tagGroups in sidebar
+- Updated dependencies [68cda2b]
+  - @scalar/themes@0.6.4
+  - @scalar/api-client@1.0.2
+  - @scalar/components@0.4.4
+  - @scalar/swagger-editor@1.0.2
+
+## 1.19.2
+
+### Patch Changes
+
+- Updated dependencies [bbbba1f]
+- Updated dependencies [897990b]
+  - @scalar/components@0.4.4
+  - @scalar/themes@0.6.3
+  - @scalar/api-client@1.0.1
+  - @scalar/swagger-editor@1.0.1
+
+## 1.19.1
+
+### Patch Changes
+
+- 148966b: fix: move errors into warning from new parser
+
+## 1.19.0
+
+### Minor Changes
+
+- 7fb8273: Migrate to @scalar/openapi-parser
+
+### Patch Changes
+
+- 7b31aa3: fix: only remove margin from 1st paragraph
+- 6036d25: fix: allow application/vnd.api+json return type
+- 53eaa1e: Export getting started
+- Updated dependencies [6036d25]
+- Updated dependencies [7fb8273]
+  - @scalar/api-client@1.0.0
+  - @scalar/swagger-editor@1.0.0
+  - @scalar/oas-utils@0.1.0
+
+## 1.18.7
+
+### Patch Changes
+
+- cecf074: Migrate to oas utils for basic spec operations
+- Updated dependencies [cecf074]
+  - @scalar/swagger-parser@0.5.23
+  - @scalar/api-client@0.12.18
+  - @scalar/oas-utils@0.0.4
+
+## 1.18.6
+
+### Patch Changes
+
+- c1410e7: fix: render missing schema properties (minimum, maximum and default values)
+
+## 1.18.5
+
+### Patch Changes
+
+- 5cf4afa: style: replace resize observer with css container queries
+
+## 1.18.4
+
+### Patch Changes
+
+- b0bd55d: fix: proxy error and side menu bug
+- Updated dependencies [b0bd55d]
+  - @scalar/swagger-parser@0.5.22
+
+## 1.18.3
+
+### Patch Changes
+
+- 5ffe3b6: fix: duplicate border top
+- bc9f965: fix: add deprecated path to classic layout
+
+## 1.18.2
+
+### Patch Changes
+
+- ddc9b17: fix: re-added moving the components css into js so importing the css file is no longer needed
+- 775646a: fix: removed extra copy of vue from themes and some dependencies
+- ef3a015: chore: update to typescript 5.4
+- Updated dependencies [ddc9b17]
+- Updated dependencies [775646a]
+- Updated dependencies [ef3a015]
+  - @scalar/api-client@0.12.17
+  - @scalar/components@0.4.3
+  - @scalar/themes@0.6.2
+  - @scalar/swagger-parser@0.5.21
+  - @scalar/use-modal@0.2.9
+  - @scalar/use-tooltip@0.5.12
+
+## 1.18.1
+
+### Patch Changes
+
+- Updated dependencies [4ef178f]
+  - @scalar/themes@0.6.1
+  - @scalar/api-client@0.12.16
+  - @scalar/components@0.4.2
+  - @scalar/swagger-editor@0.11.1
+
+## 1.18.0
+
+### Minor Changes
+
+- ad2b95a: fix: scope scrollbar styles
+- ad2b95a: refactor: move reset component to themes package
+
+### Patch Changes
+
+- Updated dependencies [ad2b95a]
+- Updated dependencies [ad2b95a]
+  - @scalar/swagger-editor@0.11.0
+  - @scalar/themes@0.6.0
+  - @scalar/api-client@0.12.15
+  - @scalar/components@0.4.2
+
+## 1.17.16
+
+### Patch Changes
+
+- f39516c: chore: remove preparsed content
+- 8b2558a: fix: custom operation security scheme is ignored
+- ad80db9: fix: content not reactive
+- 2e9218f: fix: deprecated operations are not striked through in the sidebar
+
+## 1.17.15
+
+### Patch Changes
+
+- 3b672cc: fix: revert css changes to components lib
+- 0f76d3d: style: fix padding and border for references
+- Updated dependencies [3b672cc]
+  - @scalar/swagger-editor@0.10.15
+  - @scalar/swagger-parser@0.5.20
+  - @scalar/api-client@0.12.14
+  - @scalar/components@0.4.2
+
+## 1.17.14
+
+### Patch Changes
+
+- fd0af3c: fix: mobile header button
+
+## 1.17.13
+
+### Patch Changes
+
+- 5bf377e: fix: visual regressions
+- c5e8b13: feat: hide secret credentials
+- Updated dependencies [c5e8b13]
+  - @scalar/api-client@0.12.13
+  - @scalar/components@0.4.1
+  - @scalar/swagger-editor@0.10.14
+
+## 1.17.12
+
+### Patch Changes
+
+- e0eacb2: feat: show badge for deprecated schema attributes
+- db7762c: fix: stop rendering infinite child attributes
+- 5bc2ebf: Add syntax highlighting back to codemirror
+- Updated dependencies [407a3af]
+- Updated dependencies [5bc2ebf]
+  - @scalar/components@0.4.0
+  - @scalar/swagger-editor@0.10.13
+  - @scalar/swagger-parser@0.5.19
+  - @scalar/api-client@0.12.12
+
+## 1.17.11
+
+### Patch Changes
+
+- Updated dependencies [d16d07f]
+  - @scalar/api-client@0.12.11
+
+## 1.17.10
+
+### Patch Changes
+
+- d8d8341: fix: example response with encoding in content type is not shown
+  - @scalar/api-client@0.12.10
+  - @scalar/swagger-editor@0.10.12
+
+## 1.17.9
+
+### Patch Changes
+
+- 6857b8d: fix: api client syntax highlighting
+- Updated dependencies [6857b8d]
+  - @scalar/components@0.3.0
+  - @scalar/api-client@0.12.9
+  - @scalar/swagger-editor@0.10.11
+
+## 1.17.8
+
+### Patch Changes
+
+- Updated dependencies [51acf2c]
+  - @scalar/themes@0.5.10
+  - @scalar/api-client@0.12.8
+  - @scalar/components@0.2.6
+  - @scalar/swagger-editor@0.10.10
+
+## 1.17.7
+
+### Patch Changes
+
+- 55b9633: fix: request type polish
+- c103201: fix: polish sidebar
+- 31d12a7: fix: show key-value pair examples for objects
+- 36630da: chore: remove coinmarketcap example
+- Updated dependencies [c103201]
+- Updated dependencies [d2728c8]
+  - @scalar/components@0.2.6
+  - @scalar/themes@0.5.9
+  - @scalar/api-client@0.12.7
+  - @scalar/swagger-editor@0.10.9
+
+## 1.17.4
+
+### Patch Changes
+
+- b9523b7: fix: allow application/problem+json return type
+- Updated dependencies [b9523b7]
+  - @scalar/api-client@0.12.6
+
 ## 1.17.3
 
 ### Patch Changes

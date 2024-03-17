@@ -8,12 +8,14 @@
   padding: 0 60px;
   width: 100%;
 }
-.section-container:not(:first-of-type) {
+.section-container:last-of-type {
   border-top: 1px solid
     var(--theme-border-color, var(--default-theme-border-color));
 }
 
-.references-narrow .section-container {
-  padding: 0;
+@container narrow-references-container (max-width: 900px) {
+  .section-container {
+    padding: 0;
+  }
 }
 </style>

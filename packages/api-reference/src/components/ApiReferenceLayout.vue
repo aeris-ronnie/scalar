@@ -1,33 +1,42 @@
 <script setup lang="ts">
-import { type SwaggerEditor } from '@scalar/swagger-editor'
-import { type ThemeId } from '@scalar/themes'
+import {
+  ResetStyles,
+  ScrollbarStyles,
+  type ThemeId,
+  ThemeStyles,
+} from '@scalar/themes'
 import { useDebounceFn, useMediaQuery, useResizeObserver } from '@vueuse/core'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, provide, ref, watch } from 'vue'
 
+import {
+  GLOBAL_SECURITY_SYMBOL,
+  downloadSpecBus,
+  downloadSpecFile,
+} from '../helpers'
 import { useNavState, useSidebar } from '../hooks'
 import type {
-  ReferenceConfiguration,
+  ReferenceLayoutProps,
   ReferenceLayoutSlot,
   ReferenceSlotProps,
-  Spec,
 } from '../types'
 import { default as ApiClientModal } from './ApiClientModal.vue'
 import { Content } from './Content'
 import GettingStarted from './GettingStarted.vue'
 import { Sidebar } from './Sidebar'
 
-const props = defineProps<{
-  configuration: ReferenceConfiguration
-  parsedSpec: Spec
-  rawSpec: string
-  swaggerEditorRef?: null | typeof SwaggerEditor
-}>()
+const props = defineProps<ReferenceLayoutProps>()
 
 defineEmits<{
   (e: 'changeTheme', value: ThemeId): void
   (e: 'updateContent', value: string): void
+  (e: 'loadSwaggerFile'): void
+  (e: 'linkSwaggerFile'): void
   (e: 'toggleDarkMode'): void
 }>()
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 defineSlots<{
   [x in ReferenceLayoutSlot]: (props: ReferenceSlotProps) => any
@@ -64,18 +73,14 @@ onMounted(() => {
   else if (firstTag) sectionId = getTagId(firstTag)
 
   if (sectionId) setCollapsedSidebarItem(sectionId, true)
+
+  // Enable the spec download event bus
+  downloadSpecBus.on(() => downloadSpecFile(props.rawSpec))
 })
 
 const showRenderedContent = computed(
   () => isLargeScreen.value || !props.configuration.isEditable,
 )
-
-const showSwaggerEditor = computed(() => {
-  return (
-    !props.configuration.spec?.preparsedContent &&
-    props.configuration?.isEditable
-  )
-})
 
 // To clear hash when scrolled to the top
 const debouncedScroll = useDebounceFn((value) => {
@@ -95,33 +100,107 @@ const referenceSlotProps = computed<ReferenceSlotProps>(() => ({
   breadcrumb: breadcrumb.value,
   spec: props.parsedSpec,
 }))
+
+// Provide global security
+provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
 </script>
 <template>
-  <div
-    ref="documentEl"
-    class="scalar-api-reference references-layout"
-    :class="[
-      {
-        'references-editable': showSwaggerEditor,
-        'references-sidebar': configuration.showSidebar,
-        'references-classic': configuration.layout === 'classic',
-      },
-    ]"
-    :style="{ '--full-height': `${elementHeight}px` }"
-    @scroll.passive="debouncedScroll">
-    <!-- Header -->
-    <div class="references-header">
-      <slot
-        v-bind="referenceSlotProps"
-        name="header" />
-    </div>
-    <!-- Navigation (sidebar) wrapper -->
-    <aside
-      v-show="configuration.showSidebar"
-      class="references-navigation t-doc__sidebar">
-      <!-- Navigation tree / Table of Contents -->
-      <div class="references-navigation-list">
-        <Sidebar :parsedSpec="parsedSpec">
+  <ThemeStyles :id="configuration?.theme" />
+  <ResetStyles v-slot="{ styles: reset }">
+    <ScrollbarStyles v-slot="{ styles: scrollbars }">
+      <div
+        ref="documentEl"
+        class="scalar-api-reference references-layout"
+        :class="[
+          {
+            'references-editable': configuration.isEditable,
+            'references-sidebar': configuration.showSidebar,
+            'references-classic': configuration.layout === 'classic',
+          },
+          reset,
+          scrollbars,
+          $attrs.class,
+        ]"
+        :style="{ '--full-height': `${elementHeight}px` }"
+        @scroll.passive="debouncedScroll">
+        <!-- Header -->
+        <div class="references-header">
+          <slot
+            v-bind="referenceSlotProps"
+            name="header" />
+        </div>
+        <!-- Navigation (sidebar) wrapper -->
+        <aside
+          v-show="configuration.showSidebar"
+          class="references-navigation t-doc__sidebar">
+          <!-- Navigation tree / Table of Contents -->
+          <div class="references-navigation-list">
+            <Sidebar :parsedSpec="parsedSpec">
+              <template #sidebar-start>
+                <slot
+                  v-bind="referenceSlotProps"
+                  name="sidebar-start" />
+              </template>
+              <template #sidebar-end>
+                <slot
+                  v-bind="referenceSlotProps"
+                  name="sidebar-end" />
+              </template>
+            </Sidebar>
+          </div>
+        </aside>
+        <!-- Swagger file editing -->
+        <div
+          v-show="configuration.isEditable"
+          class="references-editor">
+          <div class="references-editor-textarea">
+            <slot
+              v-bind="referenceSlotProps"
+              name="editor" />
+          </div>
+        </div>
+        <!-- Rendered reference -->
+        <template v-if="showRenderedContent">
+          <div class="references-rendered">
+            <Content
+              :layout="
+                configuration.layout === 'classic' ? 'accordion' : 'default'
+              "
+              :parsedSpec="parsedSpec">
+              <template #start>
+                <slot
+                  v-bind="referenceSlotProps"
+                  name="content-start" />
+              </template>
+              <template
+                v-if="configuration?.isEditable"
+                #empty-state>
+                <GettingStarted
+                  :theme="configuration?.theme || 'default'"
+                  @changeTheme="$emit('changeTheme', $event)"
+                  @linkSwaggerFile="$emit('linkSwaggerFile')"
+                  @loadSwaggerFile="$emit('loadSwaggerFile')"
+                  @updateContent="$emit('updateContent', $event)" />
+              </template>
+              <template #end>
+                <slot
+                  v-bind="referenceSlotProps"
+                  name="content-end" />
+              </template>
+            </Content>
+          </div>
+          <div
+            v-if="$slots.footer"
+            class="references-footer">
+            <slot
+              v-bind="referenceSlotProps"
+              name="footer" />
+          </div>
+        </template>
+        <!-- REST API Client Overlay -->
+        <ApiClientModal
+          :parsedSpec="parsedSpec"
+          :proxyUrl="configuration?.proxy">
           <template #sidebar-start>
             <slot
               v-bind="referenceSlotProps"
@@ -132,84 +211,23 @@ const referenceSlotProps = computed<ReferenceSlotProps>(() => ({
               v-bind="referenceSlotProps"
               name="sidebar-end" />
           </template>
-        </Sidebar>
+        </ApiClientModal>
       </div>
-    </aside>
-    <!-- Swagger file editing -->
-    <div
-      v-show="showSwaggerEditor"
-      class="references-editor">
-      <div class="references-editor-textarea">
-        <slot
-          v-bind="referenceSlotProps"
-          name="editor" />
-      </div>
-    </div>
-    <!-- Rendered reference -->
-    <template v-if="showRenderedContent">
-      <div class="references-rendered">
-        <Content
-          :layout="configuration.layout === 'classic' ? 'accordion' : 'default'"
-          :parsedSpec="parsedSpec"
-          :rawSpec="rawSpec">
-          <template #start>
-            <slot
-              v-bind="referenceSlotProps"
-              name="content-start" />
-          </template>
-          <template
-            v-if="configuration?.isEditable"
-            #empty-state>
-            <GettingStarted
-              :theme="configuration?.theme || 'default'"
-              :value="rawSpec"
-              @changeTheme="$emit('changeTheme', $event)"
-              @openSwaggerEditor="swaggerEditorRef?.handleOpenSwaggerEditor"
-              @updateContent="$emit('updateContent', $event)" />
-          </template>
-          <template #end>
-            <slot
-              v-bind="referenceSlotProps"
-              name="content-end" />
-          </template>
-        </Content>
-      </div>
-      <div
-        v-if="$slots.footer"
-        class="references-footer">
-        <slot
-          v-bind="referenceSlotProps"
-          name="footer" />
-      </div>
-    </template>
-    <!-- REST API Client Overlay -->
-    <ApiClientModal
-      :parsedSpec="parsedSpec"
-      :proxyUrl="configuration?.proxy">
-      <template #sidebar-start>
-        <slot
-          v-bind="referenceSlotProps"
-          name="sidebar-start" />
-      </template>
-      <template #sidebar-end>
-        <slot
-          v-bind="referenceSlotProps"
-          name="sidebar-end" />
-      </template>
-    </ApiClientModal>
-  </div>
+    </ScrollbarStyles>
+  </ResetStyles>
 </template>
 <style scoped>
 /* Configurable Layout Variables */
 .scalar-api-reference {
   --refs-sidebar-width: var(--theme-sidebar-width, 0px);
   --refs-header-height: var(--theme-header-height, 0px);
-  --refs-content-max-width: var(--theme-content-max-width, 1120px);
+  --refs-content-max-width: var(--theme-content-max-width, 1540px);
 }
 
 .scalar-api-reference.references-classic {
   /* Classic layout is wider */
   --refs-content-max-width: var(--theme-content-max-width, 1420px);
+  min-height: 100dvh;
 }
 
 /* ----------------------------------------------------- */
@@ -314,7 +332,7 @@ const referenceSlotProps = computed<ReferenceSlotProps>(() => ({
 
 .references-sidebar {
   /* Set a default width if references are enabled */
-  --refs-sidebar-width: var(--theme-sidebar-width, 250px);
+  --refs-sidebar-width: var(--theme-sidebar-width, 280px);
 }
 
 /* Footer */

@@ -1,7 +1,9 @@
 import type { ReferenceConfiguration } from '@scalar/api-reference'
 import type { Request, Response } from 'express'
 
-export type ApiReferenceOptions = ReferenceConfiguration
+export type ApiReferenceOptions = ReferenceConfiguration & {
+  cdn?: string
+}
 
 /**
  * The custom theme CSS for the API Reference.
@@ -50,7 +52,7 @@ export const customThemeCSS = `
   --sidebar-color-active: var(--theme-color-accent);
   --sidebar-search-background: transparent;
   --sidebar-search-border-color: var(--theme-border-color);
-  --sidebar-search--color: var(--theme-color-3);
+  --sidebar-search-color: var(--theme-color-3);
 }
 
 .dark-mode .sidebar {
@@ -64,7 +66,7 @@ export const customThemeCSS = `
   --sidebar-color-active: var(--theme-color-accent);
   --sidebar-search-background: transparent;
   --sidebar-search-border-color: var(--theme-border-color);
-  --sidebar-search--color: var(--theme-color-3);
+  --sidebar-search-color: var(--theme-color-3);
 }
 
 /* advanced */
@@ -122,14 +124,14 @@ export const ApiReference = (options: ApiReferenceOptions) => {
             : JSON.stringify(options.spec?.content)
           : ''
       }</script>
-    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+      <script src="${options.cdn || 'https://cdn.jsdelivr.net/npm/@scalar/api-reference'}"></script>
   `
 }
 
 /**
  * The HTML template to render the API Reference.
  */
-export function apiReference(options: ReferenceConfiguration) {
+export function apiReference(options: ApiReferenceOptions) {
   return (req: Request, res: Response) => {
     res.send(`
   <!DOCTYPE html>
@@ -141,10 +143,6 @@ export function apiReference(options: ReferenceConfiguration) {
         name="viewport"
         content="width=device-width, initial-scale=1" />
       <style>
-        body {
-          margin: 0;
-        }
-
         ${options.theme ? null : customThemeCSS}
       </style>
     </head>

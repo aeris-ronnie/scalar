@@ -1,5 +1,53 @@
 # @scalar/components
 
+## 0.4.4
+
+### Patch Changes
+
+- bbbba1f: fix: cjs export of components
+
+## 0.4.3
+
+### Patch Changes
+
+- ddc9b17: fix: re-added moving the components css into js so importing the css file is no longer needed
+- 775646a: fix: removed extra copy of vue from themes and some dependencies
+- ef3a015: chore: update to typescript 5.4
+
+## 0.4.2
+
+### Patch Changes
+
+- 3b672cc: fix: revert css changes to components lib
+
+## 0.4.1
+
+### Patch Changes
+
+- c5e8b13: feat: hide secret credentials
+
+## 0.4.0
+
+### Minor Changes
+
+- 407a3af: style: removed css file from components (breaking change)
+
+### Patch Changes
+
+- 5bc2ebf: Add syntax highlighting back to codemirror
+
+## 0.3.0
+
+### Minor Changes
+
+- 6857b8d: fix: api client syntax highlighting
+
+## 0.2.6
+
+### Patch Changes
+
+- c103201: fix: polish sidebar
+
 ## 0.2.5
 
 ### Patch Changes

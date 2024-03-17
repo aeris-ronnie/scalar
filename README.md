@@ -18,7 +18,7 @@ Generate interactive API documentations from Swagger files. [Try our Demo](https
 - Edit your Swagger files with a live preview
 - Doesn’t look like it’s 2011
 
-> [Scalar Townhall on Thu Feb, 15th in Discord](https://discord.com/invite/s4MJ7w5y?event=1198701245137952828)
+> [Scalar Townhall on Thu Mar, 28th in Discord](https://discord.com/invite/s4MJ7w5y?event=1198701245137952828)
 >
 > Join us to see upcoming features, discuss the roadmap and chat about APIs with us. 💬
 
@@ -35,6 +35,8 @@ Generate interactive API documentations from Swagger files. [Try our Demo](https
   - [With ElysiaJS](#with-elysiajs)
   - [With Express](#with-express)
   - [With NestJS](#with-nestjs)
+  - [With Docusaurus](#with-docusaurus)
+  - [With AdonisJS](#with-adonisjs)
   - [With Laravel](#with-laravel)
   - [With Rust](#with-rust)
 - [Hosted API Reference](#hosted-api-reference)
@@ -60,11 +62,6 @@ Generate interactive API documentations from Swagger files. [Try our Demo](https
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1" />
-    <style>
-      body {
-        margin: 0;
-      }
-    </style>
   </head>
   <body>
     <!-- Add your own OpenAPI/Swagger spec file URL here: -->
@@ -134,19 +131,23 @@ You can [pass props to customize the API reference](https://github.com/scalar/sc
 
 ### With React
 
-The API Reference package is written in Vue. That shouldn’t stop you from using it in React, though. You can use [veaury](https://github.com/devilwjp/veaury) to load the `<APIReference />` component in React:
+The API Reference package is written in Vue, that shouldn’t stop you from using
+it in React though! We have created a client side (untested on SSR/SSG) wrapper
+in react.
 
 ```ts
-import { ApiReference as VueComponent } from '@scalar/api-reference'
-import { applyVueInReact } from 'veaury'
-
-const ApiReference = applyVueInReact(VueComponent)
+import { ApiReferenceReact } from '@scalar/api-reference-react'
+import React from 'react'
 
 function App() {
   return (
-    <>
-      <ApiReference configuration={{ isEditable: true }} />
-    </>
+    <ApiReferenceReact
+      configuration={{
+        spec: {
+          url: 'https://petstore.swagger.io/v2/swagger.json',
+        },
+      }}
+    />
   )
 }
 
@@ -194,7 +195,9 @@ await fastify.register(require('@scalar/fastify-api-reference'), {
 })
 ```
 
-Read more: [@scalar/fastify-api-reference](https://github.com/scalar/scalar/tree/main/packages/fastify-api-reference)
+We wrote a [detailed integration guide for Fastify](https://github.com/scalar/scalar/tree/main/documentation/fastify.md), too.
+
+Read more about the package: [@scalar/fastify-api-reference](https://github.com/scalar/scalar/tree/main/packages/fastify-api-reference)
 
 ### With Platformatic
 
@@ -276,6 +279,38 @@ app.use(
 
 Read more: [@scalar/nestjs-api-reference](https://github.com/scalar/scalar/tree/main/packages/nestjs-api-reference)
 
+### With Docusaurus
+
+Our Docusaurus plugin makes it easy to render API references. Simple add the
+following to your Docusaurus config
+
+```ts
+import type { ScalarOptions } from '@scalar/docusaurus'
+
+plugins: [
+  [
+    '@scalar/docusaurus',
+    {
+      label: 'Scalar',
+      route: '/scalar',
+      configuration: {
+        spec: {
+          url: 'https://petstore3.swagger.io/api/v3/openapi.json',
+        },
+      },
+    } as ScalarOptions,
+  ],
+],
+```
+
+For more information, check out the [Docusaurus package](https://github.com/scalar/scalar/tree/main/packages/docusaurus/README.md)
+
+### With AdonisJS
+
+There’s [a community package to generate OpenAPI files in AdonisJS](https://github.com/hanspagel/adonis-autoswagger) and it comes with support for the Scalar API reference already.
+
+We wrote a [detailed integration guide for AdonisJS](https://github.com/scalar/scalar/tree/main/documentation/adonisjs.md).
+
 ### With Laravel
 
 There’s [a wonderful package to generate OpenAPI files for Laravel](https://scribe.knuckles.wtf/laravel/) already. Just set the `type` to `external_laravel` (for Blade) or `external_static` (for HTML) and `theme` to `scalar`:
@@ -333,7 +368,6 @@ To customize the behavior of the API Reference, you can use the following config
 - `isEditable`: Whether the Swagger editor should be shown.
 - `spec.content`: Directly pass an OpenAPI/Swagger spec.
 - `spec.url`: Pass the URL of a spec file (JSON or YAML).
-- `spec.preparsedContent`: Preprocess specs with `@scalar/swagger-parser` and directly pass the result.
 - `proxyUrl`: Use a proxy to send requests to other origins.
 - `darkMode`: Set dark mode on or off (light mode)
 - `layout`: The layout to use, either of `modern` or `classic` (see [#layouts](#layouts)).
@@ -428,7 +462,7 @@ Or get more advanced by styling our sidebar!
   --sidebar-color-active: var(--theme-color-2);
   --sidebar-search-background: var(--theme-background-2);
   --sidebar-search-border-color: var(--theme-border-color);
-  --sidebar-search--color: var(--theme-color-3);
+  --sidebar-search-color: var(--theme-color-3);
 }
 .dark-mode .sidebar {
   --sidebar-background-1: var(--theme-background-1);
@@ -441,7 +475,7 @@ Or get more advanced by styling our sidebar!
   --sidebar-color-active: var(--theme-color-2);
   --sidebar-search-background: var(--theme-background-2);
   --sidebar-search-border-color: var(--theme-border-color);
-  --sidebar-search--color: var(--theme-color-3);
+  --sidebar-search-color: var(--theme-color-3);
 }
 ```
 
@@ -524,10 +558,10 @@ This repository contains all our open source projects and there’s definitely m
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/mcollina">
-            <img src="https://avatars.githubusercontent.com/u/52195?v=4" width="100;" alt="mcollina"/>
+        <a href="https://github.com/ATREAY">
+            <img src="https://avatars.githubusercontent.com/u/66585295?v=4" width="100;" alt="ATREAY"/>
             <br />
-            <sub><b>mcollina</b></sub>
+            <sub><b>ATREAY</b></sub>
         </a>
     </td>
     <td align="center">
@@ -538,10 +572,10 @@ This repository contains all our open source projects and there’s definitely m
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/ATREAY">
-            <img src="https://avatars.githubusercontent.com/u/66585295?v=4" width="100;" alt="ATREAY"/>
+        <a href="https://github.com/mcollina">
+            <img src="https://avatars.githubusercontent.com/u/52195?v=4" width="100;" alt="mcollina"/>
             <br />
-            <sub><b>ATREAY</b></sub>
+            <sub><b>mcollina</b></sub>
         </a>
     </td>
     <td align="center">
@@ -552,13 +586,20 @@ This repository contains all our open source projects and there’s definitely m
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/Amorim33">
+            <img src="https://avatars.githubusercontent.com/u/42624869?v=4" width="100;" alt="Amorim33"/>
+            <br />
+            <sub><b>Amorim33</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
         <a href="https://github.com/dunklesToast">
             <img src="https://avatars.githubusercontent.com/u/17279485?v=4" width="100;" alt="dunklesToast"/>
             <br />
             <sub><b>dunklesToast</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/FotieMConstant">
             <img src="https://avatars.githubusercontent.com/u/42372656?v=4" width="100;" alt="FotieMConstant"/>
@@ -574,6 +615,13 @@ This repository contains all our open source projects and there’s definitely m
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/soulchild">
+            <img src="https://avatars.githubusercontent.com/u/59642?v=4" width="100;" alt="soulchild"/>
+            <br />
+            <sub><b>soulchild</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/sinh117801">
             <img src="https://avatars.githubusercontent.com/u/43696715?v=4" width="100;" alt="sinh117801"/>
             <br />
@@ -586,7 +634,8 @@ This repository contains all our open source projects and there’s definitely m
             <br />
             <sub><b>dotfortun</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/SebastianBienert">
             <img src="https://avatars.githubusercontent.com/u/17458785?v=4" width="100;" alt="SebastianBienert"/>
@@ -600,8 +649,7 @@ This repository contains all our open source projects and there’s definitely m
             <br />
             <sub><b>Mason-Little</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/ShadiestGoat">
             <img src="https://avatars.githubusercontent.com/u/48590492?v=4" width="100;" alt="ShadiestGoat"/>
@@ -629,7 +677,8 @@ This repository contains all our open source projects and there’s definitely m
             <br />
             <sub><b>Fdawgs</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/danp">
             <img src="https://avatars.githubusercontent.com/u/2182?v=4" width="100;" alt="danp"/>
@@ -643,8 +692,7 @@ This repository contains all our open source projects and there’s definitely m
             <br />
             <sub><b>chrislearn</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/sigpwned">
             <img src="https://avatars.githubusercontent.com/u/1236302?v=4" width="100;" alt="sigpwned"/>

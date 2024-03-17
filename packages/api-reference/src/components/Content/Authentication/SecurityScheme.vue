@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types'
+import type { OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
 import { computed } from 'vue'
 
 import { useGlobalStore } from '../../../stores'
@@ -79,15 +79,17 @@ const getOpenAuth2AuthorizationUrl = (flow: any) => {
   //   &state=something-random
 
   const scopes = authentication.oAuth2.scopes.join(' ')
-
+  const state = (Math.random() + 1).toString(36).substring(7)
   const url = new URL(flow.authorizationUrl)
+  setAuthentication({
+    oAuth2: { ...authentication.oAuth2, state },
+  })
 
   url.searchParams.set('response_type', 'token')
   url.searchParams.set('client_id', authentication.oAuth2.clientId)
   url.searchParams.set('redirect_uri', window.location.href)
   url.searchParams.set('scope', scopes)
-  // TODO: Generate random state string? Should we store that in the localStorage? 🤔
-  url.searchParams.set('state', 'something-random')
+  url.searchParams.set('state', state)
 
   return url.toString()
 }
@@ -98,14 +100,33 @@ const oauth2SelectedScopes = computed<string[]>({
     setAuthentication({ oAuth2: { ...authentication.oAuth2, scopes } }),
 })
 
+// Open oauth popup and set auth on success
 const startAuthentication = (url: string) => {
   const windowFeatures = 'left=100,top=100,width=800,height=600'
-  const handle = window.open(url, 'openAuth2Window', windowFeatures)
+  const authWindow = window.open(url, 'openAuth2Window', windowFeatures)
 
-  if (!handle) {
-    // The window wasn't allowed to open
-    // This is likely caused by built-in popup blockers.
-    // …
+  if (authWindow) {
+    const checkWindowClosed = setInterval(function () {
+      try {
+        const urlParams = new URLSearchParams(authWindow.location.href)
+        const accessToken = urlParams.get('access_token')
+
+        if (authWindow.closed || accessToken) {
+          clearInterval(checkWindowClosed)
+
+          // State is a hash fragment and cannot be found through search params
+          const state = authWindow.location.href.match(/state=([^&]*)/)?.[1]
+          if (accessToken && authentication.oAuth2.state === state) {
+            setAuthentication({
+              oAuth2: { ...authentication.oAuth2, accessToken },
+            })
+          }
+          authWindow.close()
+        }
+      } catch {
+        // Ignore CORS error from popup
+      }
+    }, 200)
   }
 }
 </script>
@@ -115,6 +136,7 @@ const startAuthentication = (url: string) => {
       v-if="value.type === 'apiKey'"
       :id="`security-scheme-${value.name}`"
       placeholder="Token"
+      type="password"
       :value="authentication.apiKey.token"
       @input="handleApiKeyTokenInput">
       {{ value.in.charAt(0).toUpperCase() + value.in.slice(1) }} API Key
@@ -146,6 +168,7 @@ const startAuthentication = (url: string) => {
         v-else-if="value.type === 'http' && value.scheme === 'bearer'"
         id="http.bearer.token"
         placeholder="Token"
+        type="password"
         :value="authentication.http.bearer.token"
         @input="handleHttpBearerTokenInput">
         Bearer Token
@@ -157,32 +180,56 @@ const startAuthentication = (url: string) => {
         (value as OpenAPIV3.OAuth2SecurityScheme).flows &&
         (value as OpenAPIV3.OAuth2SecurityScheme).flows.implicit
       ">
-      <CardFormTextInput
-        id="oAuth2.clientId"
-        placeholder="Token"
-        :value="authentication.oAuth2.clientId"
-        @input="handleOpenAuth2ClientIdInput">
-        Client ID
-      </CardFormTextInput>
-      <SecuritySchemeScopes
-        v-if="value !== undefined"
-        v-model:selected="oauth2SelectedScopes"
-        :scopes="
-          //@ts-ignore
-          value.flows.implicit.scopes
-        " />
-      <CardFormButton
-        @click="
-          () =>
-            startAuthentication(
-              getOpenAuth2AuthorizationUrl(
-                //@ts-ignore
-                value?.flows.implicit,
-              ),
-            )
-        ">
-        Authorize
-      </CardFormButton>
+      <template v-if="authentication.oAuth2.accessToken">
+        <CardFormTextInput
+          id="oAuth2.accessToken"
+          placeholder="xxxxx"
+          type="password"
+          :value="authentication.oAuth2.accessToken">
+          Access Token
+        </CardFormTextInput>
+        <CardFormButton
+          @click="
+            () =>
+              setAuthentication({
+                oAuth2: {
+                  ...authentication.oAuth2,
+                  accessToken: '',
+                  state: '',
+                },
+              })
+          ">
+          Reset
+        </CardFormButton>
+      </template>
+      <template v-else>
+        <CardFormTextInput
+          id="oAuth2.clientId"
+          placeholder="12345"
+          type="text"
+          :value="authentication.oAuth2.clientId"
+          @input="handleOpenAuth2ClientIdInput">
+          Client ID
+        </CardFormTextInput>
+        <SecuritySchemeScopes
+          v-if="value !== undefined"
+          v-model:selected="oauth2SelectedScopes"
+          :scopes="
+            (value as OpenAPIV3.OAuth2SecurityScheme).flows.implicit!.scopes
+          " />
+        <CardFormButton
+          @click="
+            () =>
+              startAuthentication(
+                getOpenAuth2AuthorizationUrl(
+                  //@ts-ignore
+                  value?.flows.implicit,
+                ),
+              )
+          ">
+          Authorize
+        </CardFormButton>
+      </template>
     </CardFormGroup>
   </CardForm>
   <CardForm v-if="value?.description">

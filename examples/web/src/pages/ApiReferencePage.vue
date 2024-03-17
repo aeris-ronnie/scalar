@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import {
-  ApiReferenceBase,
+  ApiReferenceLayout,
   type ReferenceConfiguration,
+  type Spec,
+  parse,
 } from '@scalar/api-reference'
+import { asyncComputed } from '@vueuse/core'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 
 import DevReferencesOptions from '../components/DevReferencesOptions.vue'
 import DevToolbar from '../components/DevToolbar.vue'
+import MonacoEditor from '../components/MonacoEditor.vue'
 import SlotPlaceholder from '../components/SlotPlaceholder.vue'
+import { emptySpecGenerator } from '../fixtures/emptySpec'
 
 const content = ref('')
 
@@ -45,10 +50,37 @@ const configProxy = computed({
   get: () => configuration,
   set: (v) => Object.assign(configuration, v),
 })
+
+watch(
+  () => configuration.darkMode,
+  (isDark) => {
+    document.body.classList.toggle('dark-mode', isDark)
+    document.body.classList.toggle('light-mode', !isDark)
+  },
+)
+
+const parsedSpec = asyncComputed(
+  async () =>
+    parse(content.value)
+      .then((validSpec) => {
+        // Some specs don’t have servers, make sure they are defined
+        return {
+          servers: [],
+          ...validSpec,
+        } as Spec
+      })
+      .catch((error) => {
+        console.warn(error)
+        return emptySpecGenerator()
+      }),
+  emptySpecGenerator(),
+)
 </script>
 <template>
-  <ApiReferenceBase
+  <ApiReferenceLayout
     :configuration="configuration"
+    :parsedSpec="parsedSpec"
+    :rawSpec="content"
     @changeTheme="configuration.theme = $event"
     @updateContent="(v) => (content = v)">
     <template #header>
@@ -62,6 +94,11 @@ const configProxy = computed({
     <template #sidebar-end>
       <SlotPlaceholder>sidebar-end</SlotPlaceholder>
     </template>
+    <template #editor>
+      <MonacoEditor
+        v-model="content"
+        :darkMode="configuration.darkMode" />
+    </template>
     <template #content-start>
       <SlotPlaceholder>content-start</SlotPlaceholder>
     </template>
@@ -71,5 +108,5 @@ const configProxy = computed({
     <template #footer>
       <SlotPlaceholder>footer</SlotPlaceholder>
     </template>
-  </ApiReferenceBase>
+  </ApiReferenceLayout>
 </template>

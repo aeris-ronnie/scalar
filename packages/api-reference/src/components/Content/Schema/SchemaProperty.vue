@@ -58,12 +58,23 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
 <template>
   <div
     class="property"
-    :class="[`property--level-${level}`, { 'property--compact': compact }]">
+    :class="[
+      `property--level-${level}`,
+      {
+        'property--compact': compact,
+        'property--deprecated': value?.deprecated,
+      },
+    ]">
     <div class="property-information">
       <div
         v-if="name"
         class="property-name">
         {{ name }}
+      </div>
+      <div
+        v-if="value?.deprecated"
+        class="property-deprecated">
+        <Badge>deprecated</Badge>
       </div>
       <div
         v-if="required"
@@ -96,10 +107,19 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
         </template>
         <template v-if="value.uniqueItems"> unique! </template>
         <template v-if="value.format"> &middot; {{ value.format }} </template>
+        <template v-if="value.minimum">
+          &middot; min: {{ value.minimum }}
+        </template>
+        <template v-if="value.maximum">
+          &middot; max: {{ value.maximum }}
+        </template>
         <template v-if="value.pattern">
           &middot; <code class="pattern">{{ value.pattern }}</code>
         </template>
         <template v-if="value.enum"> &middot; enum </template>
+        <template v-if="value.default">
+          &middot; default: {{ value.default }}
+        </template>
       </div>
       <div
         v-if="value?.writeOnly"
@@ -159,7 +179,10 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
     </div>
     <!-- Object -->
     <div
-      v-if="value?.properties || value?.additionalProperties"
+      v-if="
+        value?.type === 'object' &&
+        (value?.properties || value?.additionalProperties)
+      "
       class="children">
       <Schema
         :compact="compact"
@@ -222,6 +245,21 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
 
 .property--compact.property--level-0 {
   padding: 10px 0;
+}
+
+.property--deprecated {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--theme-background-2, var(--default-theme-background-2)) 0,
+    var(--theme-background-2, var(--default-theme-background-2)) 2px,
+    transparent 2px,
+    transparent 5px
+  );
+  background-size: 100%;
+}
+
+.property--deprecated > * {
+  opacity: 0.75;
 }
 
 .property-information {
