@@ -19,7 +19,7 @@ const props = withDefaults(
     /** Shows a toggle to hide/show children */
     noncollapsible?: boolean
   }>(),
-  { level: 0 },
+  { level: 0, noncollapsible: true },
 )
 
 const shouldShowToggle = computed(() => {

@@ -54,6 +54,7 @@ defineEmits<{
 .darklight-reference {
   width: 100%;
   margin-top: auto;
+  display: none;
 }
 .darklight:hover {
   cursor: pointer;

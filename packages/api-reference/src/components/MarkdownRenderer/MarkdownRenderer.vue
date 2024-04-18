@@ -103,21 +103,35 @@ onServerPrefetch(async () => await sleep(1))
   border-radius: var(--scalar-radius);
   max-width: 100%;
 }
-/* Don't add margin to the first block */
+/* Don't add margin to the first block 
 .markdown :deep(> :first-child) {
   margin-top: 0;
 }
+*/
 .markdown :deep(h1),
 .markdown :deep(h2),
 .markdown :deep(h3),
 .markdown :deep(h4),
 .markdown :deep(h5),
 .markdown :deep(h6) {
-  font-size: var(--font-size);
-  margin: 18px 0 6px;
-  font-weight: var(--scalar-bold);
+  margin: 24px 0 6px;
+  font-weight: var(--theme-bold, var(--default-theme-bold));
   display: block;
   line-height: 1.45;
+}
+.markdown :deep(h1) {
+  font-size: var(--font-size-1, var(--default-font-size-1));
+}
+.markdown :deep(h2) {
+  font-size: var(--font-size-2, var(--default-font-size-2));
+}
+.markdown :deep(h3) {
+  font-size: var(--font-size-3, var(--default-font-size-3));
+}
+.markdown :deep(h4),
+.markdown :deep(h5),
+.markdown :deep(h6) {
+  font-size: var(--font-size, var(--default-font-size));
 }
 .markdown :deep(b),
 .markdown :deep(strong) {

@@ -52,7 +52,7 @@ function handleScroll() {
   max-width: var(--refs-content-max-width);
   margin: auto;
 
-  padding: 90px 0;
+  padding: 40px 0;
 
   /* Offset by header height to line up scroll position */
   scroll-margin-top: var(--refs-header-height);
