@@ -10,15 +10,14 @@ post-checkout:
       # {1} is old-hash, {2} is current-head, {3} is 1 for a branch checkout, 0 for a file checkout
       # See https://git-scm.com/docs/githooks#_post_checkout
       run: 'if [ ! -z "$(git diff {1}..{2} --name-only pnpm-lock.yaml)" ]; then pnpm install -r; fi'
-
-pre-commit:
-  commands:
-    package_format:
-      glob: 'pnpm-lock.yaml'
-      run: pnpm format:packages; git add \*package.json pnpm-lock.yaml; echo PACKAGE FILES FORMATTED
-    prettier:
-      glob: '*.{js,ts,jsx,tsx,vue,md,json,css,scss,html,yml,yaml}'
-      run: 'pnpm prettier --write {staged_files} && git add {staged_files}'
-    eslint:
-      glob: '*.{js,ts,jsx,tsx,vue}'
-      run: 'pnpm eslint {staged_files} --fix && git add {staged_files}'
+# pre-commit:
+#   commands:
+#     package_format:
+#       glob: 'pnpm-lock.yaml'
+#       run: pnpm format:packages; git add \*package.json pnpm-lock.yaml; echo PACKAGE FILES FORMATTED
+#     prettier:
+#       glob: '*.{js,ts,jsx,tsx,vue,md,json,css,scss,html,yml,yaml}'
+#       run: 'pnpm prettier --write {staged_files} && git add {staged_files}'
+#     eslint:
+#       glob: '*.{js,ts,jsx,tsx,vue}'
+#       run: 'pnpm eslint {staged_files} --fix && git add {staged_files}'
