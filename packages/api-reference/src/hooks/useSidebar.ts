@@ -1,4 +1,5 @@
-import { useApiClientStore } from '@scalar/api-client'
+import { useApiClientStore, useOpenApiStore } from '@scalar/api-client'
+import { type TransformedOperation, ssrState } from '@scalar/oas-utils'
 import { type OpenAPIV3_1 } from '@scalar/openapi-parser'
 import { computed, reactive, ref, watch } from 'vue'
 
@@ -9,7 +10,7 @@ import {
   hasWebhooks,
   openClientFor,
 } from '../helpers'
-import type { Spec, Tag, TransformedOperation } from '../types'
+import type { Spec, Tag } from '../types'
 import { useNavState } from './useNavState'
 
 export type SidebarEntry = {
@@ -36,13 +37,17 @@ const {
 // Track the parsed spec
 const parsedSpec = ref<Spec | undefined>(undefined)
 
+const hideModels = ref(false)
+
 // Track which sidebar items are collapsed
 type CollapsedSidebarItems = Record<string, boolean>
 
-const collapsedSidebarItems = reactive<CollapsedSidebarItems>({})
+const collapsedSidebarItems = reactive<CollapsedSidebarItems>(
+  ssrState['useSidebarContent-collapsedSidebarItems'] ?? {},
+)
 
 function toggleCollapsedSidebarItem(key: string) {
-  collapsedSidebarItems[key] = !collapsedSidebarItems[key] ?? true
+  collapsedSidebarItems[key] = !collapsedSidebarItems[key]
 }
 
 function setCollapsedSidebarItem(key: string, value: boolean) {
@@ -64,6 +69,9 @@ const items = computed(() => {
   // Check whether the API client is visible
   const { state } = useApiClientStore()
   const titlesById: Record<string, string> = {}
+  const {
+    openApi: { globalSecurity },
+  } = useOpenApiStore()
 
   // Introduction
   const headingEntries: SidebarEntry[] = headings.value.map((heading) => {
@@ -105,7 +113,7 @@ const items = computed(() => {
                 show: true,
                 select: () => {
                   if (state.showApiClient) {
-                    openClientFor(operation)
+                    openClientFor(operation, globalSecurity)
                   }
                 },
               }
@@ -125,11 +133,37 @@ const items = computed(() => {
             show: true,
             select: () => {
               if (state.showApiClient) {
-                openClientFor(operation)
+                openClientFor(operation, globalSecurity)
               }
             },
           }
         })
+
+  // Models
+  const modelEntries: SidebarEntry[] =
+    hasModels(parsedSpec.value) && !hideModels.value
+      ? [
+          {
+            id: getModelId(),
+            title: 'MODELS',
+            show: !state.showApiClient,
+            children: Object.keys(
+              parsedSpec.value?.components?.schemas ?? {},
+            ).map((name) => {
+              const id = getModelId(name)
+              titlesById[id] = name
+
+              return {
+                id,
+                title:
+                  (parsedSpec?.value?.components?.schemas?.[name] as any)
+                    .title ?? name,
+                show: !state.showApiClient,
+              }
+            }),
+          },
+        ]
+      : []
 
   const groupOperations: SidebarEntry[] | undefined = parsedSpec.value?.[
     'x-tagGroups'
@@ -137,11 +171,15 @@ const items = computed(() => {
     ? parsedSpec.value?.['x-tagGroups']?.map((tagGroup) => {
         const children: SidebarEntry[] = []
         tagGroup.tags.map((tagName: string) => {
-          const tag = operationEntries?.find(
-            (entry) => entry.title === tagName.toUpperCase(),
-          )
-          if (tag) {
-            children.push(tag)
+          if (tagName.toUpperCase() === 'MODELS' && modelEntries.length > 0) {
+            children.push(modelEntries[0])
+          } else {
+            const tag = operationEntries?.find(
+              (entry) => entry.title === tagName.toUpperCase(),
+            )
+            if (tag) {
+              children.push(tag)
+            }
           }
         })
         const sidebarTagGroup = {
@@ -185,31 +223,6 @@ const items = computed(() => {
       ]
     : []
 
-  // Models
-  const modelEntries: SidebarEntry[] = hasModels(parsedSpec.value)
-    ? [
-        {
-          id: getModelId(),
-          title: 'MODELS',
-          show: !state.showApiClient,
-          children: Object.keys(
-            parsedSpec.value?.components?.schemas ?? {},
-          ).map((name) => {
-            const id = getModelId(name)
-            titlesById[id] = name
-
-            return {
-              id,
-              title:
-                (parsedSpec?.value?.components?.schemas?.[name] as any).title ??
-                name,
-              show: !state.showApiClient,
-            }
-          }),
-        },
-      ]
-    : []
-
   return {
     entries: [
       ...headingEntries,
@@ -221,6 +234,10 @@ const items = computed(() => {
   }
 })
 
+// Controls whether or not the sidebar is open on MOBILE only
+// Desktop uses the standard showSidebar prop which supercedes this one
+const isSidebarOpen = ref(false)
+
 const breadcrumb = computed(() => items.value?.titles?.[hash.value] ?? '')
 
 export function useSidebar(options?: { parsedSpec: Spec }) {
@@ -231,9 +248,9 @@ export function useSidebar(options?: { parsedSpec: Spec }) {
     watch(
       () => parsedSpec.value?.tags?.length,
       () => {
-        if (window?.location.hash) {
-          const hashSectionId = getSectionId(window.location.hash)
-          if (!hashSectionId) setCollapsedSidebarItem(hashSectionId, true)
+        if (hash.value) {
+          const hashSectionId = getSectionId(hash.value)
+          if (hashSectionId) setCollapsedSidebarItem(hashSectionId, true)
         } else {
           const firstTag = parsedSpec.value?.tags?.[0]
           if (firstTag) setCollapsedSidebarItem(getTagId(firstTag), true)
@@ -259,8 +276,10 @@ export function useSidebar(options?: { parsedSpec: Spec }) {
   return {
     breadcrumb,
     items,
+    isSidebarOpen,
     collapsedSidebarItems,
     toggleCollapsedSidebarItem,
     setCollapsedSidebarItem,
+    hideModels,
   }
 }

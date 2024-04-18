@@ -47,6 +47,12 @@ import PageLink from '../components/PageLink.vue'
           API documentation within a pre-existing website.
         </template>
       </PageLink>
+      <PageLink to="path-routing-api-reference">
+        <template #title>API Reference with Path Routing</template>
+        <template #description>
+          Standalone API Reference with path routing instead of hash routing
+        </template>
+      </PageLink>
     </div>
     <h1>@scalar/api-client</h1>
     <div class="page-links">
@@ -60,11 +66,19 @@ import PageLink from '../components/PageLink.vue'
     </div>
     <h1>Examples</h1>
     <div class="page-links">
-      <PageLink href="http://localhost:5051">
+      <PageLink href="http://localhost:5062/scalar">
+        <template #title>Nuxt</template>
+        <template #description>@scalar/nuxt</template>
+      </PageLink>
+      <PageLink href="http://localhost:5063/scalar">
+        <template #title>Docusaurus</template>
+        <template #description>@scalar/docusaurus</template>
+      </PageLink>
+      <PageLink href="http://localhost:5058">
         <template #title>Next.js</template>
         <template #description>@scalar/nextjs-api-reference</template>
       </PageLink>
-      <PageLink href="http://localhost:5052">
+      <PageLink href="http://localhost:5059">
         <template #title>React</template>
         <template #description>@scalar/api-reference</template>
       </PageLink>

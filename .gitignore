@@ -13,3 +13,6 @@ test-*.yaml
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Temporary Vite/Vitest config files
+*.config.ts.timestamp-*.mjs

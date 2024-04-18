@@ -7,7 +7,7 @@ const props = defineProps<{
   label?: string
 }>()
 
-const { getSectionId, hash, isIntersectionEnabled } = useNavState()
+const { getSectionId, hash, isIntersectionEnabled, pathRouting } = useNavState()
 const { setCollapsedSidebarItem } = useSidebar()
 
 function handleScroll() {
@@ -15,8 +15,18 @@ function handleScroll() {
 
   // We use replaceState so we don't trigger the url hash watcher and trigger a scroll
   // this is why we set the hash value directly
-  window.history.replaceState({}, '', `#${props.id}`)
-  hash.value = props.id ?? ''
+  const newUrl = new URL(window.location.href)
+  const id = props.id ?? ''
+
+  // If we are pathrouting, set path instead of hash
+  if (pathRouting.value) {
+    newUrl.pathname = pathRouting.value.basePath + '/' + id
+  } else {
+    newUrl.hash = id
+  }
+  hash.value = id
+
+  window.history.replaceState({}, '', newUrl)
 
   // Open models on scroll
   if (props.id?.startsWith('model'))
@@ -42,9 +52,10 @@ function handleScroll() {
   max-width: var(--refs-content-max-width);
   margin: auto;
 
-  /* Extend by header height to line up scroll position */
-  padding: calc(40px + var(--refs-header-height)) 0 40px 0;
-  margin-top: calc(-1 * var(--refs-header-height));
+  padding: 90px 0;
+
+  /* Offset by header height to line up scroll position */
+  scroll-margin-top: var(--refs-header-height);
 }
 .references-classic .section {
   padding: 48px 0;
@@ -53,7 +64,7 @@ function handleScroll() {
 @container narrow-references-container (max-width: 900px) {
   .references-classic .section,
   .section {
-    padding: calc(48px + var(--refs-header-height)) 24px 48px 24px;
+    padding: 48px 24px;
   }
 }
 .section:not(:last-of-type) {

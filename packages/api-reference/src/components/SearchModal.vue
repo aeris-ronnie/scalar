@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { HttpMethod } from '@scalar/api-client'
+import { type TransformedOperation } from '@scalar/oas-utils'
 import type { OpenAPIV3_1 } from '@scalar/openapi-parser'
 import { FlowModal, type ModalState } from '@scalar/use-modal'
 import { useMagicKeys, whenever } from '@vueuse/core'
@@ -9,9 +10,12 @@ import { computed, ref, toRef, watch } from 'vue'
 import { getHeadingsFromMarkdown } from '../helpers'
 import { extractRequestBody } from '../helpers/specHelpers'
 import { type ParamMap, useNavState, useOperation, useSidebar } from '../hooks'
-import type { Spec, TransformedOperation } from '../types'
+import type { Spec } from '../types'
 
-const props = defineProps<{ parsedSpec: Spec; modalState: ModalState }>()
+const props = defineProps<{
+  parsedSpec: Spec
+  modalState: ModalState
+}>()
 const reactiveSpec = toRef(props, 'parsedSpec')
 
 const keys = useMagicKeys()
@@ -60,6 +64,8 @@ watch(
     searchResults.value = []
   },
 )
+
+const { setCollapsedSidebarItem, hideModels } = useSidebar()
 
 watch(
   reactiveSpec.value,
@@ -163,7 +169,7 @@ watch(
     }
 
     // Adding models as well
-    const schemas = props.parsedSpec.components?.schemas
+    const schemas = hideModels.value ? {} : props.parsedSpec.components?.schemas
     const modelData: FuseData[] = []
 
     if (schemas) {
@@ -261,7 +267,6 @@ const searchResultsWithPlaceholderResults = computed(
 )
 
 const tagRegex = /#(tag\/[^/]*)/
-const { setCollapsedSidebarItem } = useSidebar()
 
 // Ensure we open the section
 const onSearchResultClick = (entry: Fuse.FuseResult<FuseData>) => {
@@ -273,6 +278,16 @@ const onSearchResultClick = (entry: Fuse.FuseResult<FuseData>) => {
   }
   setCollapsedSidebarItem(parentId, true)
   props.modalState.hide()
+}
+
+// given just a #hash-name, we grab the full URL to be explicit to
+// handle edge cases of other framework routers resetting to base URL on navigation
+function getFullUrlFromHash(href: string) {
+  const newUrl = new URL(window.location.href)
+
+  newUrl.hash = href
+
+  return newUrl.toString()
 }
 </script>
 <template>
@@ -305,7 +320,7 @@ const onSearchResultClick = (entry: Fuse.FuseResult<FuseData>) => {
           'item-entry--active': index === selectedSearchResult,
           'item-entry--tag': !entry.item.httpVerb,
         }"
-        :href="entry.item.href"
+        :href="getFullUrlFromHash(entry.item.href)"
         @click="onSearchResultClick(entry)"
         @focus="selectedSearchResult = index">
         <HttpMethod

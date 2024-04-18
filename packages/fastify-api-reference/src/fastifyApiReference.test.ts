@@ -21,6 +21,21 @@ describe('fastifyApiReference', () => {
     expect(response.status).toBe(200)
   })
 
+  it('hasPlugin(fastifyApiReference) returns true', async () => {
+    const fastify = Fastify({
+      logger: false,
+    })
+
+    await fastify.register(fastifyApiReference, {
+      routePrefix: '/reference',
+      configuration: {
+        spec: { url: '/swagger.json' },
+      },
+    })
+
+    expect(fastify.hasPlugin('@scalar/fastify-api-reference')).toBeTruthy()
+  })
+
   it('no fastify-html exposed', async () => {
     const fastify = Fastify({
       logger: false,
@@ -69,6 +84,26 @@ describe('fastifyApiReference', () => {
     const response = await fetch(`${address}/reference`)
     expect(await response.text()).toContain(
       '/reference/@scalar/fastify-api-reference/js/browser.js',
+    )
+  })
+
+  it('prefixes the JS url', async () => {
+    const fastify = Fastify({
+      logger: false,
+    })
+
+    fastify.register(fastifyApiReference, {
+      routePrefix: '/reference',
+      publicPath: '/foobar',
+      configuration: {
+        spec: { url: '/swagger.json' },
+      },
+    })
+
+    const address = await fastify.listen({ port: 0 })
+    const response = await fetch(`${address}/reference`)
+    expect(await response.text()).toContain(
+      '/foobar/reference/@scalar/fastify-api-reference/js/browser.js',
     )
   })
 

@@ -1,5 +1,71 @@
 # @scalar/fastify-api-reference
 
+## 1.21.0
+
+### Minor Changes
+
+- b58b83e: Improved fastify-api-reference plugin.
+
+## 1.20.27
+
+### Patch Changes
+
+- 605f522: feat: support tags with no operations
+
+## 1.20.26
+
+### Patch Changes
+
+- 050410a: feat: add config to hide download button
+
+## 1.20.25
+
+### Patch Changes
+
+- 1504d3b: feat: add config to hide models
+
+## 1.20.22
+
+### Patch Changes
+
+- 4089634: feat: support x-displayName tag extension
+
+## 1.20.20
+
+### Patch Changes
+
+- c14568f: feat: add custom security option
+
+## 1.20.19
+
+### Patch Changes
+
+- ed44d47: manual fastify release
+
+## 1.20.10
+
+### Patch Changes
+
+- bec8e52: fix: add models to tag groups
+
+## 1.20.9
+
+### Patch Changes
+
+- 5260d07: feat: description for any
+
+## 1.20.5
+
+### Patch Changes
+
+- 0c5e22c: fix: section flare if position fixed
+
+## 1.20.2
+
+### Patch Changes
+
+- b32f46c: chore: update @scalar/api-reference
+
 ## 1.19.5
 
 ### Patch Changes

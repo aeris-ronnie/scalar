@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 
 import { hasModels } from '../../helpers'
-import { useNavState, useRefOnMount } from '../../hooks'
-import type { Spec } from '../../types'
+import { useNavState, useSidebar } from '../../hooks'
+import { useServerStore } from '../../stores'
+import type { Server, Spec } from '../../types'
 import { Authentication } from './Authentication'
 import { BaseUrl } from './BaseUrl'
 import { ClientLibraries } from './ClientLibraries'
@@ -17,38 +18,59 @@ import { Webhooks } from './Webhooks'
 const props = defineProps<{
   parsedSpec: Spec
   layout?: 'default' | 'accordion'
+  baseServerURL?: string
 }>()
 
-const { getOperationId, getTagId } = useNavState()
+const { getOperationId, getTagId, hash } = useNavState()
+const { setServer } = useServerStore()
+const { hideModels, collapsedSidebarItems } = useSidebar()
 
-const fallBackServer = useRefOnMount(() => {
-  return {
-    url: window.location.origin,
+const prependRelativePath = (server: Server) => {
+  // URLs that don't start with http[s]://
+  if (server.url.match(/^(?!https?:\/\/).+/)) {
+    let baseURL = props.baseServerURL ?? window.location.origin
+
+    // Handle slashes
+    baseURL = baseURL.replace(/\/$/, '')
+    const url = server.url.startsWith('/') ? server.url : `/${server.url}`
+    server.url = `${baseURL}${url}`.replace(/\/$/, '')
   }
-})
+  return server
+}
 
-const localServers = computed(() => {
-  if (props.parsedSpec.servers && props.parsedSpec.servers.length > 0) {
-    return props.parsedSpec.servers
-  } else if (
-    props.parsedSpec.host &&
-    props.parsedSpec.schemes &&
-    props.parsedSpec.schemes.length > 0
-  ) {
-    return [
-      {
-        url: `${props.parsedSpec.schemes[0]}://${props.parsedSpec.host}${
-          props.parsedSpec?.basePath ?? ''
-        }`,
-      },
+// Watch the spec and set the servers
+watch(
+  () => props.parsedSpec,
+  (parsedSpec) => {
+    let servers = [
+      { url: typeof window !== 'undefined' ? window.location.origin : '/' },
     ]
-  } else if (fallBackServer.value) {
-    return [fallBackServer.value]
-  } else {
-    return [{ url: '' }]
-  }
-})
 
+    if (parsedSpec.servers && parsedSpec.servers.length > 0) {
+      servers = parsedSpec.servers
+    } else if (
+      props.parsedSpec.host &&
+      props.parsedSpec.schemes &&
+      props.parsedSpec.schemes.length > 0
+    ) {
+      servers = [
+        {
+          url: `${props.parsedSpec.schemes[0]}://${props.parsedSpec.host}${
+            props.parsedSpec?.basePath ?? ''
+          }`,
+        },
+      ]
+    }
+
+    // Pre-pend relative paths (if we can)
+    if (props.baseServerURL || typeof window !== 'undefined') {
+      servers = servers.map(prependRelativePath)
+    }
+
+    setServer({ servers })
+  },
+  { deep: true, immediate: true },
+)
 const tagLayout = computed<typeof Tag>(() =>
   props.layout === 'accordion' ? TagAccordion : Tag,
 )
@@ -60,19 +82,25 @@ const introCardsSlot = computed(() =>
 )
 
 // If the first load is models, we do not lazy load tags/operations
-const isLazy =
-  props.layout !== 'accordion' &&
-  typeof window !== 'undefined' &&
-  !window.location.hash.startsWith('#model')
+const isLazy = props.layout !== 'accordion' && !hash.value.startsWith('model')
 </script>
 <template>
+  <!-- For adding gradients + animations to introduction of documents that :before / :after won't work for -->
+  <div class="section-flare">
+    <div class="section-flare-item"></div>
+    <div class="section-flare-item"></div>
+    <div class="section-flare-item"></div>
+    <div class="section-flare-item"></div>
+    <div class="section-flare-item"></div>
+    <div class="section-flare-item"></div>
+    <div class="section-flare-item"></div>
+    <div class="section-flare-item"></div>
+  </div>
   <div class="narrow-references-container">
     <slot name="start" />
-
     <Loading
       :layout="layout"
-      :parsedSpec="parsedSpec"
-      :server="localServers[0]" />
+      :parsedSpec="parsedSpec" />
 
     <Introduction
       v-if="parsedSpec.info.title || parsedSpec.info.description"
@@ -82,7 +110,7 @@ const isLazy =
         <div
           class="introduction-cards"
           :class="{ 'introduction-cards-row': layout === 'accordion' }">
-          <BaseUrl :value="localServers" />
+          <BaseUrl />
           <ClientLibraries />
           <Authentication :parsedSpec="parsedSpec" />
         </div>
@@ -96,10 +124,9 @@ const isLazy =
       v-for="tag in parsedSpec.tags"
       :id="getTagId(tag)"
       :key="getTagId(tag)"
-      :isLazy="isLazy">
+      :isLazy="isLazy && !collapsedSidebarItems[getTagId(tag)]">
       <Component
         :is="tagLayout"
-        v-if="tag.operations && tag.operations.length > 0"
         :id="getTagId(tag)"
         :spec="parsedSpec"
         :tag="tag">
@@ -112,7 +139,6 @@ const isLazy =
             :is="endpointLayout"
             :id="getOperationId(operation, tag)"
             :operation="operation"
-            :server="localServers[0]"
             :tag="tag" />
         </Lazy>
       </Component>
@@ -122,7 +148,7 @@ const isLazy =
       <Webhooks :webhooks="parsedSpec.webhooks" />
     </template>
 
-    <template v-if="hasModels(parsedSpec)">
+    <template v-if="hasModels(parsedSpec) && !hideModels">
       <ModelsAccordion
         v-if="layout === 'accordion'"
         :components="parsedSpec.components" />
@@ -197,5 +223,11 @@ const isLazy =
       + .scalar-card-content
   ) {
   margin-top: 0;
+}
+.section-flare {
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: none;
 }
 </style>

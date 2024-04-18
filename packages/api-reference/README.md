@@ -78,7 +78,27 @@ Making requests to other domains is restricted in the browser and requires [CORS
 Whether the sidebar should be shown.
 
 ```vue
-<ApiReference :configuration="{ showSidebar: true} />
+<ApiReference :configuration="{ showSidebar: true } />
+```
+
+#### hideModels?: boolean
+
+Whether models (components.schemas) should be shown in the sidebar, search and content.
+
+`@default false`
+
+```vue
+<ApiReference :configuration="{ hideModels: true } />
+```
+
+#### hideDownloadButton?: boolean
+
+Whether to show the "Download OpenAPI Specification" button
+
+`@default false`
+
+```vue
+<ApiReference :configuration="{ hideDownloadButton: true } />
 ```
 
 ### customCss?: string
@@ -154,10 +174,10 @@ To make authentication easier you can prefill the credentials for your users:
 ````vue
 <ApiReference :configuration="{
   authentication: {
-      // The OpenAPI file has keys for all security schemes
+      // The OpenAPI file has keys for all security schemes:
       // Which one should be used by default?
-      securitySchemeKey: 'api_key',
-      // Okay, the `api_key` security scheme is of type `apiKey`, so prefill the token:
+      preferredSecurityScheme: 'my_custom_security_scheme',
+      // The `my_custom_security_scheme` security scheme is of type `apiKey`, so prefill the token:
       apiKey: {
         token: 'super-secret-token',
       },
@@ -172,8 +192,8 @@ For OpenAuth2 it’s more looking like this:
   authentication: {
       // The OpenAPI file has keys for all security schemes
       // Which one should be used by default?
-      securitySchemeKey: 'petstore_auth',
-      // Okay, the `api_key` security scheme is of type `oAuth2`, so prefill the client id and the scopes:
+      preferredSecurityScheme: 'petstore_auth',
+      // The `petstore_auth` security scheme is of type `oAuth2`, so prefill the client id and the scopes:
       oAuth2: {
         clientId: 'foobar123',
         // optional:

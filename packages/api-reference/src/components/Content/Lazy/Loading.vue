@@ -1,14 +1,10 @@
 <script lang="ts" setup>
+import { type TransformedOperation } from '@scalar/oas-utils'
 import { onMounted, ref, watch } from 'vue'
 
 import { scrollToId } from '../../../helpers'
 import { useNavState } from '../../../hooks'
-import type {
-  Server,
-  Spec,
-  Tag as TagType,
-  TransformedOperation,
-} from '../../../types'
+import type { Spec, Tag as TagType } from '../../../types'
 import { Anchor } from '../../Anchor'
 import {
   Section,
@@ -38,22 +34,19 @@ const props = withDefaults(
   defineProps<{
     layout?: 'accordion' | 'default'
     parsedSpec: Spec
-    server: Server
   }>(),
   { layout: 'default' },
 )
 
 const hideTag = ref(false)
-const isLoading = ref(
-  typeof window !== 'undefined' &&
-    !!window.location.hash &&
-    props.layout !== 'accordion',
-)
+
 const tags = ref<(TagType & { lazyOperations: TransformedOperation[] })[]>([])
 const models = ref<string[]>([])
 
 const { getModelId, getSectionId, getTagId, hash, isIntersectionEnabled } =
   useNavState()
+
+const isLoading = ref(props.layout !== 'accordion' && hash.value)
 
 // Ensure we have a spec loaded
 watch(
@@ -100,7 +93,7 @@ watch(
       })
     }
     // Models
-    else {
+    else if (hash.value.startsWith('model')) {
       const modelKeys = Object.keys(props.parsedSpec.components?.schemas ?? {})
       const [, modelKey] = hash.value.toLowerCase().split('/')
 
@@ -115,6 +108,11 @@ watch(
       // Display a couple models
       models.value = modelKeys.slice(modelIndex, modelIndex + 3)
     }
+    // Descriptions
+    else {
+      scrollToId(hash.value)
+      setTimeout(() => (isIntersectionEnabled.value = true), 1000)
+    }
   },
   { immediate: true },
 )
@@ -128,8 +126,9 @@ const unsubscribe = lazyBus.on(({ id }) => {
   unsubscribe()
 
   // Timeout is to allow codemirror to finish loading and prevent layout shift
+  // TODO mutation observer
   setTimeout(() => {
-    scrollToId(hashStr)
+    if (typeof window !== 'undefined') scrollToId(hashStr)
     isLoading.value = false
     setTimeout(() => (isIntersectionEnabled.value = true), 1000)
   }, 300)
@@ -160,7 +159,6 @@ onMounted(() => {
           v-for="operation in tag.lazyOperations"
           :key="`${operation.httpVerb}-${operation.operationId}`"
           :operation="operation"
-          :server="server"
           :tag="tag" />
       </Tag>
     </template>
@@ -201,7 +199,12 @@ onMounted(() => {
   background: var(--theme-background-1, var(--default-theme-background-1));
 }
 .references-loading-top-spacer {
-  top: calc(var(--refs-header-height) - 1px);
+  top: -1px;
+}
+@media (min-width: 1001px) {
+  .references-loading-top-spacer {
+    top: calc(var(--refs-header-height) - 1px);
+  }
 }
 .references-loading-hidden-tag .section-container .section:first-child {
   display: none;

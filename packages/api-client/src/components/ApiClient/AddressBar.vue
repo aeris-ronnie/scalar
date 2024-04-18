@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { CodeMirror } from '@scalar/use-codemirror'
 import { FlowModal, useModal } from '@scalar/use-modal'
+import { isMacOS } from '@scalar/use-tooltip'
 import { useMagicKeys, whenever } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
@@ -9,7 +10,7 @@ import {
   prepareClientRequestConfig,
   sendRequest,
 } from '../../helpers'
-import { useRequestStore } from '../../stores/requestStore'
+import { useRequestStore } from '../../stores'
 import RequestHistory from './RequestHistory.vue'
 import RequestMethodSelect from './RequestMethodSelect.vue'
 
@@ -22,7 +23,7 @@ const emits = defineEmits<{
 }>()
 
 const keys = useMagicKeys()
-whenever(keys.meta_enter, send)
+whenever(isMacOS() ? keys.meta_enter : keys.ctrl_enter, send)
 
 const showHistory = ref(false)
 const loading = ref(false)
@@ -34,7 +35,6 @@ const {
   requestHistoryOrder,
   readOnly,
   setActiveRequest,
-  authState,
 } = useRequestStore()
 
 const historyModal = useModal()
@@ -68,7 +68,6 @@ const formattedUrl = computed(() => {
 async function send() {
   const clientRequestConfig = prepareClientRequestConfig({
     request: { ...activeRequest },
-    authState,
   })
   loading.value = true
   emits('onSend')
@@ -87,8 +86,6 @@ const lastRequestTimestamp = computed(() => {
     : 'History'
 })
 
-// TODO we need to not update the active request with these computed properties
-// we get an infinite loop
 const onChange = (value: string) => {
   if (readOnly.value) {
     return
@@ -98,7 +95,10 @@ const onChange = (value: string) => {
     return
   }
 
-  setActiveRequest({ ...activeRequest, url: value })
+  // The address is actually two values (URL + path). But we only have one value in the address bar.
+  // So we need to reset path, and just put everything into URL.
+  // TODO: This will bite us if we ever want to store the data and switch between environments (base URLs).
+  setActiveRequest({ ...activeRequest, url: value, path: '' })
 }
 
 const handleRequestMethodChanged = (requestMethod?: string) => {
@@ -283,7 +283,7 @@ const handleRequestMethodChanged = (requestMethod?: string) => {
   font-size: var(--theme-micro, var(--default-theme-micro));
   letter-spacing: 0.25px;
   font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  color: white;
+  color: var(--theme-button-1-color, var(--default-theme-button-1-color));
   border: none;
   white-space: nowrap;
   padding: 0 12px;
@@ -293,10 +293,7 @@ const handleRequestMethodChanged = (requestMethod?: string) => {
   font-family: (--theme-font, var(--default-theme-font));
   border-radius: 0 var(--theme-radius, var(--default-theme-radius))
     var(--theme-radius, var(--default-theme-radius)) 0;
-  background: var(
-    --scalar-api-client-color,
-    var(--default-scalar-api-client-color)
-  );
+  background: var(--theme-button-1, var(--default-theme-button-1));
   position: relative;
   /**  #087f5b */
   display: flex;
@@ -304,20 +301,8 @@ const handleRequestMethodChanged = (requestMethod?: string) => {
   overflow: hidden;
   flex-shrink: 0;
 }
-.send-button:before {
-  content: '';
-  position: absolute;
-  top: -5%;
-  left: -5%;
-  width: 110%;
-  height: 110%;
-  pointer-events: none;
-  cursor: pointer;
-  border-radius: var(--theme-radius, var(--default-theme-radius));
-  background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
-}
-.send-button:hover:before {
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
+.send-button:hover {
+  background: var(--theme-button-1-hover, var(--default-theme-button-1-hover));
 }
 .send-button svg {
   width: 12px;

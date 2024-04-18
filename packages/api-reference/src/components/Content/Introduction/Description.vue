@@ -1,9 +1,17 @@
 <script setup lang="ts">
+import {
+  type DescriptionSectionSSRKey,
+  type SSRState,
+  createHash,
+  ssrState,
+} from '@scalar/oas-utils'
 import { computedAsync } from '@vueuse/core'
+import { onServerPrefetch, useSSRContext } from 'vue'
 
 import {
   getHeadingsFromMarkdown,
   getLowestHeadingLevel,
+  sleep,
   splitMarkdownInSections,
 } from '../../../helpers'
 import { useNavState } from '../../../hooks'
@@ -13,6 +21,9 @@ import { MarkdownRenderer } from '../../MarkdownRenderer'
 const props = defineProps<{
   value?: string
 }>()
+
+const ssrHash = createHash(props.value)
+const ssrStateKey: DescriptionSectionSSRKey = `components-Content-Introduction-Description-sections${ssrHash}`
 
 const sections = computedAsync(
   async () => {
@@ -37,19 +48,35 @@ const sections = computedAsync(
       ),
     )
   },
-  [], // initial state
+  ssrState[ssrStateKey] ?? [], // initial state
 )
 
-const { getHeadingId, hash, isIntersectionEnabled } = useNavState()
+const { getHeadingId, hash, isIntersectionEnabled, pathRouting } = useNavState()
 
-function handleScroll(headingId: string) {
+function handleScroll(headingId = '') {
   if (!isIntersectionEnabled.value) return
+
+  const newUrl = new URL(window.location.href)
+
+  // If we are pathrouting, set path instead of hash
+  if (pathRouting.value) {
+    newUrl.pathname = pathRouting.value.basePath + '/' + headingId
+  } else {
+    newUrl.hash = headingId
+  }
+  hash.value = headingId
 
   // We use replaceState so we don't trigger the url hash watcher and trigger a scroll
   // this is why we set the hash value directly
-  window.history.replaceState({}, '', `#${headingId}`)
-  hash.value = headingId ?? ''
+  window.history.replaceState({}, '', newUrl)
 }
+
+// SSR hack - waits for the computedAsync to complete then we save the state
+onServerPrefetch(async () => {
+  const ctx = useSSRContext<SSRState>()
+  await sleep(1)
+  ctx!.payload.data[ssrStateKey] = sections.value
+})
 </script>
 <template>
   <div
